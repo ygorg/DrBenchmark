@@ -43,17 +43,17 @@ for t in tasks:
 
     corpus, task, fewshot = t.split("|")
 
-    runs_metrics = []    
+    runs_metrics = []
 
     for m in models:
 
         if t.find("deft2020|regr") != -1 or t.find("clister|regr") != -1:
             metric = f"{round(data[m][t]['edrm'], 2)}" + " / " + f"{round(data[m][t]['spearman_correlation_coef'], 2)}"
-        
+
         elif t.find("frenchmedmcqa|mcqa") != -1:
             # metric = float(f"{round(data[m][t]['hamming_score'], 2)}")
             metric = f"{round(data[m][t]['hamming_score'] * 100, 2)} / {round(data[m][t]['exact_match'] * 100, 2)}"
-        
+
         elif t.find("|ner") != -1 or t.find("|pos") != -1:
             # metric = float(f"{round(data[m][t]['overall_f1'], 2)}")
             metric = f"{round(data[m][t]['overall_f1'] * 100, 2)}"

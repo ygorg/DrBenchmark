@@ -45,9 +45,9 @@ def main():
     )
     #logger.setLevel(logging.INFO)
 
-    if args.offline == True:   
+    if args.offline == True:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
-    else:            
+    else:
         dataset = load_dataset(
             "DrBenchmark/CAS",
             name=str(args.subset),
@@ -90,7 +90,7 @@ def main():
     dataset_test = dataset_test.remove_columns(["text"])
     dataset_test.set_format("torch")
 
-    os.makedirs(args.output_dir, exist_ok=True)    
+    os.makedirs(args.output_dir, exist_ok=True)
     output_name = f"DrBenchmark-CAS-{str(args.subset)}-{str(uuid.uuid4().hex)}"
 
     training_args = TrainingArguments(
@@ -139,7 +139,7 @@ def main():
         target_names=labels_list,
     )
     print(f1_score)
-        
+
     with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({
             "model_name": f"{args.output_dir}/{output_name}_best_model",

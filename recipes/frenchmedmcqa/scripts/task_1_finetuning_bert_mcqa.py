@@ -41,9 +41,9 @@ def main():
     )
     #logger.setLevel(logging.INFO)
 
-    if args.offline == True:   
+    if args.offline == True:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
-    else:            
+    else:
         dataset = load_dataset(
             "DrBenchmark/FrenchMedMCQA",
             trust_remote_code=True,

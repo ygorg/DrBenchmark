@@ -9,7 +9,7 @@ def save_locally(model_name):
 
     print(f">> {model_name}")
     local_path = f"./models/{model_name.lower().replace('/','_')}/"
-    
+
     model = AutoModel.from_pretrained(model_name)
     model.save_pretrained(local_path)
     tokenizer = AutoTokenizer.from_pretrained(model_name)

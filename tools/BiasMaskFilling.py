@@ -55,11 +55,11 @@ for m in models:
                 results = fill_mask(text)
                 results = [r["token_str"] for r in results]
                 results = [r for r in results if len(r) > 4][0:15]
-                
+
                 bias_res[b][m].extend(results)
-        
+
         bias_res[b][m] = [c[0] for c in Counter(bias_res[b][m]).most_common(15)]
-        print(bias_res[b][m])   
+        print(bias_res[b][m])
 
 with open("./stats/bias.json", 'w') as f:
     json.dump(bias_res, f, indent=4)

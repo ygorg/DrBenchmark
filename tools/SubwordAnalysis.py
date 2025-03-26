@@ -73,9 +73,9 @@ for m in models:
         for e in task['dataset']:
 
             # print(e)
-            
+
             if task["model"].lower().find("quaero") != -1 or task["model"].lower().find("e3c") != -1 or task["model"].lower().find("mantragsc") != -1 or task["model"].lower().find("essai") != -1 or task["model"].lower().find("cas") != -1:
-                
+
                 if len(e["tokens"]) == 0:
                     nbr_tokens = 0
                 else:
@@ -83,7 +83,7 @@ for m in models:
                     nbr_tokens = float(len(output) / len(e["tokens"]))
                     # print(float(len(output)))
                     # print(len(e["tokens"]))
-            
+
             if task["model"].lower().find("frenchmedmcqa") != -1:
                 text = f"{e['question']} {tokenizer.sep_token} " + f" {tokenizer.sep_token} ".join([e[f"answer_{letter}"] for letter in ["a","b","c","d","e"]])
                 tokens = text.split(" ")
@@ -94,13 +94,13 @@ for m in models:
                 tokens = e['abstract'].split(" ")
                 output = tokenizer(list(tokens), is_split_into_words=True)["input_ids"]
                 nbr_tokens = float(len(output) / len(tokens))
-            
+
             if task["model"].lower().find("deft") != -1 and task["subset"] == "task_1":
                 text = f"{tokenizer.cls_token} {e['source']} {tokenizer.sep_token}  {e['cible']} {tokenizer.eos_token}"
                 tokens = text.split(" ")
                 output = tokenizer(list(tokens), is_split_into_words=True)["input_ids"]
                 nbr_tokens = float(len(output) / len(tokens))
-            
+
             if task["model"].lower().find("deft") != -1 and task["subset"] == "task_2":
                 text = f"{e['source']} {tokenizer.sep_token} (1) {e['cible_1']} {tokenizer.sep_token} (2) {e['cible_2']} {tokenizer.sep_token} (3) {e['cible_3']}"
                 tokens = text.split(" ")
@@ -166,5 +166,5 @@ for t in list(matrix_avg_tokens_per_word.keys()):
         v = sum(matrix_avg_tokens_per_word[t][m]) / len(matrix_avg_tokens_per_word[t][m])
         values.append(str(round(v,2)))
 
-    print(" & ".join(values) + " \\\\", end="")    
+    print(" & ".join(values) + " \\\\", end="")
     print()

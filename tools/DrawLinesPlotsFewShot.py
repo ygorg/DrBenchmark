@@ -4,7 +4,7 @@ from glob import glob
 
 import numpy as np
 import matplotlib.pyplot as plt
-  
+
 f = open("./stats/results.json","r")
 results = json.load(f)
 f.close()
@@ -12,17 +12,17 @@ f.close()
 avg_results = {}
 
 for model in results:
-    
+
     # print(model)
 
     if model not in avg_results:
         avg_results[model] = {}
-    
+
     for task in results[model]:
 
         if task not in avg_results[model]:
             avg_results[model][task] = {}
-        
+
         # print(task)
 
         for metric in results[model][task].keys():
@@ -32,7 +32,7 @@ for model in results:
 
             if metric not in avg_results[model][task]:
                 avg_results[model][task][metric] = -1
-            
+
             avg_results[model][task][metric] = avg
 
 bottom = [0.25, 0.50, 0.75, 1.0]
@@ -42,9 +42,9 @@ models_names = list(avg_results.keys())
 results_fewshot = {}
 
 for model in avg_results:
-        
+
     for taskf in avg_results[model]:
-        
+
         corpus, task, fewshot = taskf.split("|")
         idx_fewshot = bottom.index(float(fewshot))
 
@@ -60,11 +60,11 @@ for model in avg_results:
         if task.find("regr") != -1 or task.find("regr") != -1:
             metric = float(f"{round(avg_results[model][taskf]['edrm'] * 100, 2)}")
             # metric = f"{round(avg_results[model][taskf]['edrm'], 2)}" + " / " + f"{round(avg_results[model][taskf]['spearman_correlation_coef'], 2)}"
-        
+
         elif task.find("mcqa") != -1:
             metric = float(f"{round(avg_results[model][taskf]['hamming_score'] * 100, 2)}")
             # metric = f"{round(avg_results[model][taskf]['hamming_score'], 2)} / {round(avg_results[model][taskf]['exact_match'], 2)}"
-        
+
         elif task.find("pos") != -1 or task.find("ner") != -1:
             metric = float(f"{round(avg_results[model][taskf]['overall_f1'] * 100, 2)}")
             # metric = f"{round(avg_results[model][taskf]['overall_f1'], 2)}"
@@ -72,7 +72,7 @@ for model in avg_results:
         else:
             metric = float(f"{round(avg_results[model][taskf]['weighted_f1'] * 100, 2)}")
             # metric = f"{round(avg_results[model][taskf]['weighted_f1'] * 100, 2)}"
-        
+
         results_fewshot[key][model][idx_fewshot] = metric
 
 mapping = {
@@ -100,12 +100,12 @@ mapping_line = {
 os.makedirs("./stats/fewshot", exist_ok=True)
 
 for key in results_fewshot:
-    
+
     corpus, task = key.split("|")
 
     min_val = 100
     max_val = 0
-    
+
     for model in results_fewshot[key]:
 
         values = [float(v) for v in results_fewshot[key][model]]

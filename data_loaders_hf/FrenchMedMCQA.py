@@ -77,7 +77,7 @@ class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
                 "number_correct_answers": datasets.features.ClassLabel(names=["1","2","3","4","5"]),
             }
         )
-        
+
         return datasets.DatasetInfo(
             description=_DESCRIPTION,
             features=features,

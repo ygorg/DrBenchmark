@@ -51,7 +51,7 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
     ]
 
     def _info(self):
-        
+
         if self.config.name.find("cls") != -1:
 
             features = datasets.Features(
@@ -96,10 +96,10 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
 
         if self.config.data_dir is None:
             raise ValueError("This is a local dataset. Please pass the data_dir kwarg to load_dataset.")
-        
+
         else:
             data_dir = self.config.data_dir
-            
+
         return [
             datasets.SplitGenerator(
                 name=datasets.Split.TRAIN,
@@ -128,50 +128,50 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
         if a.startswith(prefix):
             a = a[len(prefix) :]
         return a
-		
+
     def parse_brat_file(self, txt_file: Path, annotation_file_suffixes: List[str] = None, parse_notes: bool = False) -> Dict:
-    
+
         example = {}
         example["document_id"] = txt_file.with_suffix("").name
         with txt_file.open() as f:
             example["text"] = f.read()
-    
+
         # If no specific suffixes of the to-be-read annotation files are given - take standard suffixes
         # for event extraction
         if annotation_file_suffixes is None:
             annotation_file_suffixes = [".a1", ".a2", ".ann"]
-    
+
         if len(annotation_file_suffixes) == 0:
             raise AssertionError(
                 "At least one suffix for the to-be-read annotation files should be given!"
             )
-    
+
         ann_lines = []
         for suffix in annotation_file_suffixes:
             annotation_file = txt_file.with_suffix(suffix)
             if annotation_file.exists():
                 with annotation_file.open() as f:
                     ann_lines.extend(f.readlines())
-    
+
         example["text_bound_annotations"] = []
         example["events"] = []
         example["relations"] = []
         example["equivalences"] = []
         example["attributes"] = []
         example["normalizations"] = []
-    
+
         if parse_notes:
             example["notes"] = []
-    
+
         for line in ann_lines:
             line = line.strip()
             if not line:
                 continue
-    
+
             if line.startswith("T"):  # Text bound
                 ann = {}
                 fields = line.split("\t")
-    
+
                 ann["id"] = fields[0]
                 ann["type"] = fields[1].split()[0]
                 ann["offsets"] = []
@@ -180,7 +180,7 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                 for span in span_str.split(";"):
                     start, end = span.split()
                     ann["offsets"].append([int(start), int(end)])
-    
+
                 # Heuristically split text of discontiguous entities into chunks
                 ann["text"] = []
                 if len(ann["offsets"]) > 1:
@@ -193,17 +193,17 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                             i += 1
                 else:
                     ann["text"] = [text]
-    
+
                 example["text_bound_annotations"].append(ann)
-    
+
             elif line.startswith("E"):
                 ann = {}
                 fields = line.split("\t")
-    
+
                 ann["id"] = fields[0]
-    
+
                 ann["type"], ann["trigger"] = fields[1].split()[0].split(":")
-    
+
                 ann["arguments"] = []
                 for role_ref_id in fields[1].split()[1:]:
                     argument = {
@@ -211,16 +211,16 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                         "ref_id": (role_ref_id.split(":"))[1],
                     }
                     ann["arguments"].append(argument)
-    
+
                 example["events"].append(ann)
-    
+
             elif line.startswith("R"):
                 ann = {}
                 fields = line.split("\t")
-    
+
                 ann["id"] = fields[0]
                 ann["type"] = fields[1].split()[0]
-    
+
                 ann["head"] = {
                     "role": fields[1].split()[1].split(":")[0],
                     "ref_id": fields[1].split()[1].split(":")[1],
@@ -229,9 +229,9 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                     "role": fields[1].split()[2].split(":")[0],
                     "ref_id": fields[1].split()[2].split(":")[1],
                 }
-    
+
                 example["relations"].append(ann)
-    
+
             # '*' seems to be the legacy way to mark equivalences,
             # but I couldn't find any info on the current way
             # this might have to be adapted dependent on the brat version
@@ -239,136 +239,136 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
             elif line.startswith("*"):
                 ann = {}
                 fields = line.split("\t")
-    
+
                 ann["id"] = fields[0]
                 ann["ref_ids"] = fields[1].split()[1:]
-    
+
                 example["equivalences"].append(ann)
-    
+
             elif line.startswith("A") or line.startswith("M"):
                 ann = {}
                 fields = line.split("\t")
-    
+
                 ann["id"] = fields[0]
-    
+
                 info = fields[1].split()
                 ann["type"] = info[0]
                 ann["ref_id"] = info[1]
-    
+
                 if len(info) > 2:
                     ann["value"] = info[2]
                 else:
                     ann["value"] = ""
-    
+
                 example["attributes"].append(ann)
-    
+
             elif line.startswith("N"):
                 ann = {}
                 fields = line.split("\t")
-    
+
                 ann["id"] = fields[0]
                 ann["text"] = fields[2]
-    
+
                 info = fields[1].split()
-    
+
                 ann["type"] = info[0]
                 ann["ref_id"] = info[1]
                 ann["resource_name"] = info[2].split(":")[0]
                 ann["cuid"] = info[2].split(":")[1]
                 example["normalizations"].append(ann)
-    
+
             elif parse_notes and line.startswith("#"):
                 ann = {}
                 fields = line.split("\t")
-    
+
                 ann["id"] = fields[0]
                 ann["text"] = fields[2] if len(fields) == 3 else "<BB_NULL_STR>"
-    
+
                 info = fields[1].split()
-    
+
                 ann["type"] = info[0]
                 ann["ref_id"] = info[1]
                 example["notes"].append(ann)
         return example
 
     def _to_source_example(self, brat_example: Dict) -> Dict:
-    
+
         source_example = {
             "document_id": brat_example["document_id"],
             "text": brat_example["text"],
         }
-    
+
         source_example["entities"] = []
-    
+
         for entity_annotation in brat_example["text_bound_annotations"]:
             entity_ann = entity_annotation.copy()
-    
+
             # Change id property name
             entity_ann["entity_id"] = entity_ann["id"]
             entity_ann.pop("id")
-    
+
             # Add entity annotation to sample
             source_example["entities"].append(entity_ann)
-    
+
         return source_example
 
     def convert_to_prodigy(self, json_object, list_label):
-    
+
         def prepare_split(text):
-    
+
             rep_before = ['?', '!', ';', '*']
             rep_after = ['’', "'"]
             rep_both = ['-', '/', '[', ']', ':', ')', '(', ',', '.']
-    
+
             for i in rep_before:
                 text = text.replace(i, ' '+i)
-    
+
             for i in rep_after:
                 text = text.replace(i, i+' ')
-    
+
             for i in rep_both:
                 text = text.replace(i, ' '+i+' ')
-    
+
             text_split = text.split()
-    
+
             punctuations = [',', '.']
             for j in range(0, len(text_split)-1):
                 if j-1 >= 0 and j+1 <= len(text_split)-1 and text_split[j-1][-1].isdigit() and text_split[j+1][0].isdigit():
                     if text_split[j] in punctuations:
                         text_split[j-1:j+2] = [''.join(text_split[j-1:j+2])]
-    
+
             text = ' '.join(text_split)
-    
+
             return text
-        
+
         new_json = []
-    
+
         for ex in [json_object]:
-            
+
             text = prepare_split(ex['text'])
-    
+
             tokenized_text = text.split()
-    
+
             list_spans = []
-    
+
             for a in ex['entities']:
-    
+
                 for o in range(len(a['offsets'])):
-    
+
                     text_annot = prepare_split(a['text'][o])
-    
+
                     offset_start = a['offsets'][o][0]
                     offset_end = a['offsets'][o][1]
-    
+
                     nb_tokens_annot = len(text_annot.split())
-    
+
                     txt_offsetstart = prepare_split(ex['text'][:offset_start])
-    
+
                     nb_tokens_before_annot = len(txt_offsetstart.split())
-    
+
                     token_start = nb_tokens_before_annot
                     token_end = token_start + nb_tokens_annot - 1
-    
+
                     if a['type'] in list_label:
                         list_spans.append({
                             'start': offset_start,
@@ -379,7 +379,7 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                             'id': a['entity_id'],
                             'text': a['text'][o],
                         })
-    
+
             res = {
                 'id': ex['document_id'],
                 'document_id': ex['document_id'],
@@ -387,60 +387,60 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                 'tokens': tokenized_text,
                 'spans': list_spans
             }
-    
+
             new_json.append(res)
-            
+
         return new_json
 
     def convert_to_hf_format(self, json_object):
-    
+
         dict_out = []
-    
+
         for i in json_object:
-    
+
             # Filter annotations to keep the longest annotated spans when there is nested annotations
             selected_annotations = []
-    
+
             if 'spans' in i:
-    
+
                 for idx_j, j in enumerate(i['spans']):
-    
+
                     len_j = int(j['end'])-int(j['start'])
                     range_j = [l for l in range(int(j['start']),int(j['end']),1)]
-    
+
                     keep = True
-    
+
                     for idx_k, k in enumerate(i['spans'][idx_j+1:]):
-    
+
                         len_k = int(k['end'])-int(k['start'])
                         range_k = [l for l in range(int(k['start']),int(k['end']),1)]
-    
+
                         inter = list(set(range_k).intersection(set(range_j)))
                         if len(inter) > 0 and len_j < len_k:
                             keep = False
-    
+
                     if keep:
                         selected_annotations.append(j)
-    
+
             # Create list of labels + id to separate different annotation and prepare IOB2 format
             nb_tokens = len(i['tokens'])
             ner_tags = ['O']*nb_tokens
-            
+
             for slct in selected_annotations:
-    
+
                 for x in range(slct['token_start'], slct['token_end']+1, 1):
-    
+
                     if i['tokens'][x] not in slct['text']:
                         if ner_tags[x-1] == 'O':
                             ner_tags[x-1] = slct['label']+'-'+slct['id']
                     else:
                         if ner_tags[x] == 'O':
                             ner_tags[x] = slct['label']+'-'+slct['id']
-    
+
             # Make IOB2 format
             ner_tags_IOB2 = []
             for idx_l, label in enumerate(ner_tags):
-    
+
                 if label == 'O':
                     ner_tags_IOB2.append('O')
                 else:
@@ -455,31 +455,31 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                             ner_tags_IOB2.append('B-'+current_label)
                     else:
                         ner_tags_IOB2.append('B-'+current_label)
-    
+
             dict_out.append({
                 'id': i['id'],
                 'document_id': i['document_id'],
                 "ner_tags": ner_tags_IOB2,
                 "tokens": i['tokens'],
             })
-        
+
         return dict_out
 
 
     def split_sentences(self, json_o):
         """
             Split each document in sentences to fit the 512 maximum tokens of BERT.
-    
+
         """
-        
+
         final_json = []
-        
+
         for i in json_o:
-    
+
             ind_punc = [index for index, value in enumerate(i['tokens']) if value=='.'] + [len(i['tokens'])]
-            
+
             for index, value in enumerate(ind_punc):
-                
+
                 if index==0:
                     final_json.append({'id': i['id']+'_'+str(index),
                                     'document_id': i['document_id'],
@@ -492,12 +492,12 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                                     'document_id': i['document_id'],
                                     'ner_tags': i['ner_tags'][prev_value+1:value+1],
                                     'tokens': i['tokens'][prev_value+1:value+1]
-                                    }) 
-        
+                                    })
+
         return final_json
 
     def _generate_examples(self, data_dir, split):
-        
+
         if self.config.name.find("cls") != -1:
 
             all_res = {}
@@ -525,7 +525,7 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
 
                         if len(raw_split) == 3 and raw_split[0] in doc_specialities_:
                             doc_specialities_[raw_split[0]].append(raw_split[1])
-                        
+
                         elif len(raw_split) == 3 and raw_split[0] not in doc_specialities_:
                             doc_specialities_[raw_split[0]] = [raw_split[1]]
 
@@ -562,14 +562,14 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                         key += 1
 
                 distribution = [line.strip() for line in f_dist.readlines()]
-                
+
                 random.seed(4)
                 train = [raw.split('\t')[0] for raw in distribution if len(raw.split('\t')) == 4 and raw.split('\t')[3] == 'train 2021']
                 random.shuffle(train)
                 random.shuffle(train)
                 random.shuffle(train)
                 train, validation = np.split(train, [int(len(train)*0.7096)])
-                
+
                 test = [raw.split('\t')[0] for raw in distribution if len(raw.split('\t')) == 4 and raw.split('\t')[3] == 'test 2021']
 
                 if split == "train":
@@ -618,7 +618,7 @@ class DEFT2021(datasets.GeneratorBasedBuilder):
                     for h in hf_split:
 
                         if len(h['tokens']) > 0 and len(h['ner_tags']) > 0:
-                            
+
                             all_res.append({
                                 "id": str(key),
                                 "document_id": h['document_id'],

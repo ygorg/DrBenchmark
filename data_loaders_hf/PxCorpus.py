@@ -41,11 +41,11 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
     BUILDER_CONFIGS = [
         datasets.BuilderConfig(name=f"default", version="1.0.0", description=f"PxCorpus data"),
     ]
-    
+
     DEFAULT_CONFIG_NAME = "default"
 
     def _info(self):
-        
+
         features = datasets.Features(
             {
                 "id": datasets.Value("string"),
@@ -61,7 +61,7 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
                 ),
             }
         )
-        
+
         return datasets.DatasetInfo(
             description=_DESCRIPTION,
             features=features,
@@ -74,7 +74,7 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
         data_dir = dl_manager.download_and_extract(_URL)
 
         print(data_dir)
-            
+
         return [
             datasets.SplitGenerator(
                 name=datasets.Split.TRAIN,
@@ -125,7 +125,7 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
 
         key = 0
         all_res = []
-    
+
         f_seq_in = open(filepath_1, "r")
         seq_in = f_seq_in.read().split("\n")
         f_seq_in.close()
@@ -155,7 +155,7 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
                 "tokens": tokens,
                 "ner_tags": ner_tags,
             })
-            
+
             key += 1
 
         ids = [r["id"] for r in all_res]
@@ -164,7 +164,7 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
         random.shuffle(ids)
         random.shuffle(ids)
         random.shuffle(ids)
-        
+
         train, validation, test = np.split(ids, [int(len(ids)*0.70), int(len(ids)*0.80)])
 
         if split == "train":
@@ -173,7 +173,7 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
             allowed_ids = list(validation)
         elif split == "test":
             allowed_ids = list(test)
-        
+
         for r in all_res:
             if r["id"] in allowed_ids:
                 yield r["id"], r

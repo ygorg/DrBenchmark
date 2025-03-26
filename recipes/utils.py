@@ -76,7 +76,7 @@ def parse_args():
         raise ValueError('Cannot use `max_train_samples` and `fewshot` at the same time. Please check local and global config files.')
 
     args["output_dir"] = args["output_dir"].rstrip('/')
-    
+
     if args["offline"] == True:
         os.environ["WANDB_DISABLED"] = "true"
         os.environ['TRANSFORMERS_OFFLINE']='1'
@@ -84,5 +84,5 @@ def parse_args():
         args["model_name"] = f"../../../models/{model_name_clean}"
 
     # print(f">> Model path: >>{args['model_name']}<<")
-    
+
     return Namespace(**args)

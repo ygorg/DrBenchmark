@@ -77,9 +77,9 @@ def main():
     )
     #logger.setLevel(logging.INFO)
 
-    if args.offline == True:   
+    if args.offline == True:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_task_1/")
-    else:            
+    else:
         dataset = load_dataset(
             "DrBenchmark/DEFT2020",
             name="task_1",
@@ -121,7 +121,7 @@ def main():
     dataset_test = dataset_test.remove_columns(["text"])
     dataset_test.set_format("torch")
 
-    os.makedirs(args.output_dir, exist_ok=True)    
+    os.makedirs(args.output_dir, exist_ok=True)
     output_name = f"DrBenchmark-DEFT2020-regression-{str(uuid.uuid4().hex)}"
 
     training_args = TrainingArguments(
@@ -162,7 +162,7 @@ def main():
     _predictions, _labels, _ = trainer.predict(dataset_test)
     predictions = {id: p for id, p in zip(dataset_test_ids, _predictions)}
     labels      = {id: p for id, p in zip(dataset_test_ids, _labels)}
-    
+
     edrm = EDRM(labels, predictions)
     print(">> EDRM: ", edrm)
 

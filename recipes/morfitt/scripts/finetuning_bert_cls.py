@@ -51,7 +51,7 @@ def multi_label_metrics(predictions, labels, threshold=THRESHOLD_VALUE):
 def compute_metrics(p: EvalPrediction):
     preds = p.predictions[0] if isinstance(p.predictions, tuple) else p.predictions
     result = multi_label_metrics(
-        predictions=preds, 
+        predictions=preds,
         labels=p.label_ids
     )
     return result
@@ -66,9 +66,9 @@ def main():
     )
     #logger.setLevel(logging.INFO)
 
-    if args.offline == True:   
+    if args.offline == True:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
-    else:            
+    else:
         dataset = load_dataset(
             "DrBenchmark/MORFITT",
             name=args.subset,

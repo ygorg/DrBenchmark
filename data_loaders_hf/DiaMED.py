@@ -42,7 +42,7 @@ class DiaMed(datasets.GeneratorBasedBuilder):
     BUILDER_CONFIGS = [
         datasets.BuilderConfig(name=f"default", version="1.0.0", description=f"DiaMED data"),
     ]
-    
+
     DEFAULT_CONFIG_NAME = "default"
 
     def _info(self):
@@ -99,7 +99,7 @@ class DiaMed(datasets.GeneratorBasedBuilder):
                 ]),
             }
         )
-        
+
         return datasets.DatasetInfo(
             description=_DESCRIPTION,
             features=features,
@@ -144,7 +144,7 @@ class DiaMed(datasets.GeneratorBasedBuilder):
             data = json.load(f)
 
             for key, d in enumerate(data):
-                
+
                 if str(d["icd-10"]) == "nan" or d["icd-10"].find("Plusieurs cas cliniques") != -1 or d["icd-10"].find("Aucune annotation") != -1:
                     continue
 

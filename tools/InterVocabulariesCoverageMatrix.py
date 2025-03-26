@@ -32,7 +32,7 @@ for m1_path in models:
 
     m1_tokenizer = AutoTokenizer.from_pretrained(m1_path)
     m1_vocab = [v.replace("</w>","").replace("▁","").replace("##","") for v in m1_tokenizer.get_vocab().keys()]
-    
+
     for m2_path in models:
 
         m2_tokenizer = AutoTokenizer.from_pretrained(m2_path)
@@ -42,7 +42,7 @@ for m1_path in models:
 
         print(f"{m1_path} - {m2_path} : {taux}")
         line.append(taux)
-    
+
     matrix.append(line)
 
 print(">> Start saving scores!")

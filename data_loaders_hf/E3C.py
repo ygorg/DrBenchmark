@@ -44,12 +44,12 @@ class E3C(datasets.GeneratorBasedBuilder):
 
     BUILDER_CONFIGS += [
         datasets.BuilderConfig(name=f"{lang}_temporal", version="1.0.0", description=f"The {lang} subset of the E3C corpus") for lang in _LANGUAGES
-    ]    
-    
+    ]
+
     DEFAULT_CONFIG_NAME = "French_clinical"
 
     def _info(self):
-        
+
         if self.config.name == "default":
             self.config.name = self.DEFAULT_CONFIG_NAME
 
@@ -57,7 +57,7 @@ class E3C(datasets.GeneratorBasedBuilder):
             names = ["O","B-CLINENTITY","I-CLINENTITY"]
         elif self.config.name.find("temporal") != -1:
             names = ["O", "B-EVENT", "B-ACTOR", "B-BODYPART", "B-TIMEX3", "B-RML", "I-EVENT", "I-ACTOR", "I-BODYPART", "I-TIMEX3", "I-RML"]
-        
+
         features = datasets.Features(
             {
                 "id": datasets.Value("string"),
@@ -70,7 +70,7 @@ class E3C(datasets.GeneratorBasedBuilder):
                 ),
             }
         )
-        
+
         return datasets.DatasetInfo(
             description=_DESCRIPTION,
             features=features,
@@ -85,9 +85,9 @@ class E3C(datasets.GeneratorBasedBuilder):
         print(data_dir)
 
         if self.config.name.find("clinical") != -1:
-            
+
             print("clinical")
-            
+
             return [
                 datasets.SplitGenerator(
                     name=datasets.Split.TRAIN,
@@ -111,11 +111,11 @@ class E3C(datasets.GeneratorBasedBuilder):
                     },
                 ),
             ]
-            
+
         elif self.config.name.find("temporal") != -1:
-            
+
             print("temporal")
-            
+
             return [
                 datasets.SplitGenerator(
                     name=datasets.Split.TRAIN,
@@ -161,14 +161,14 @@ class E3C(datasets.GeneratorBasedBuilder):
     def get_parsed_data(self, filepath: str):
 
         for root, _, files in os.walk(filepath):
-            
+
             for file in files:
-            
+
                 with open(f"{root}/{file}") as soup_file:
-            
+
                     soup = BeautifulSoup(soup_file, "xml")
                     text = soup.find("cas:Sofa").get("sofaString")
-            
+
                     yield {
                         "CLINENTITY": self.get_clinical_annotations(soup.find_all("custom:CLINENTITY"), text),
                         "EVENT": self.get_annotations(soup.find_all("custom:EVENT"), text),
@@ -240,63 +240,63 @@ class E3C(datasets.GeneratorBasedBuilder):
                                         temporal_information_labels[idx_token] = f"I-{entity_type}"
 
                 if self.config.name.find("clinical") != -1:
-                    _labels = clinical_labels        
+                    _labels = clinical_labels
                 elif self.config.name.find("temporal") != -1:
                     _labels = temporal_information_labels
-                
+
                 all_res.append({
                     "id": key,
                     "text": sentence[-1],
                     "tokens": list(map(lambda token: token[2], filtered_tokens)),
                     "ner_tags": _labels,
                 })
-                
+
                 key += 1
-        
+
         if self.config.name.find("clinical") != -1:
-            
+
             if split != "test":
-                
+
                 ids = [r["id"] for r in all_res]
-        
+
                 random.seed(4)
                 random.shuffle(ids)
                 random.shuffle(ids)
                 random.shuffle(ids)
-                
+
                 train, validation = np.split(ids, [int(len(ids)*0.8738)])
-        
+
                 if split == "train":
                     allowed_ids = list(train)
                 elif split == "validation":
                     allowed_ids = list(validation)
-                
+
                 for r in all_res:
                     if r["id"] in allowed_ids:
                         yield r["id"], r
             else:
-                
+
                 for r in all_res:
                     yield r["id"], r
-        
+
         elif self.config.name.find("temporal") != -1:
-            
+
             ids = [r["id"] for r in all_res]
-    
+
             random.seed(4)
             random.shuffle(ids)
             random.shuffle(ids)
             random.shuffle(ids)
-            
+
             train, validation, test = np.split(ids, [int(len(ids)*0.70), int(len(ids)*0.80)])
-    
+
             if split == "train":
                 allowed_ids = list(train)
             elif split == "validation":
                 allowed_ids = list(validation)
             elif split == "test":
                 allowed_ids = list(test)
-            
+
             for r in all_res:
                 if r["id"] in allowed_ids:
                     yield r["id"], r

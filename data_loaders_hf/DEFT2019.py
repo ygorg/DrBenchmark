@@ -116,10 +116,10 @@ class DEFT2019(datasets.GeneratorBasedBuilder):
 
 		if self.config.data_dir is None:
 			raise ValueError("This is a local dataset. Please pass the data_dir kwarg to load_dataset.")
-		
+
 		else:
 			data_dir = self.config.data_dir
-			
+
 		return [
 			datasets.SplitGenerator(
 				name=datasets.Split.TRAIN,
@@ -148,7 +148,7 @@ class DEFT2019(datasets.GeneratorBasedBuilder):
 		if a.startswith(prefix):
 			a = a[len(prefix) :]
 		return a
-		
+
 	def parse_brat_file(self, txt_file: Path, annotation_file_suffixes: List[str] = None, parse_notes: bool = False) -> Dict:
 
 		example = {}
@@ -360,11 +360,11 @@ class DEFT2019(datasets.GeneratorBasedBuilder):
 			text = ' '.join(text_split)
 
 			return text
-		
+
 		new_json = []
 
 		for ex in [json_object]:
-			
+
 			text = prepare_split(ex['text'])
 
 			tokenized_text = text.split()
@@ -409,7 +409,7 @@ class DEFT2019(datasets.GeneratorBasedBuilder):
 			}
 
 			new_json.append(res)
-			
+
 		return new_json
 
 	def convert_to_hf_format(self, json_object):
@@ -445,7 +445,7 @@ class DEFT2019(datasets.GeneratorBasedBuilder):
 			# Create list of labels + id to separate different annotation and prepare IOB2 format
 			nb_tokens = len(i['tokens'])
 			ner_tags = ['O']*nb_tokens
-			
+
 			for slct in selected_annotations:
 
 				for x in range(slct['token_start'], slct['token_end']+1, 1):
@@ -482,7 +482,7 @@ class DEFT2019(datasets.GeneratorBasedBuilder):
 				"ner_tags": ner_tags_IOB2,
 				"tokens": i['tokens'],
 			})
-		
+
 		return dict_out
 
 
@@ -491,15 +491,15 @@ class DEFT2019(datasets.GeneratorBasedBuilder):
 			Split each document in sentences to fit the 512 maximum tokens of BERT.
 
 		"""
-		
+
 		final_json = []
-		
+
 		for i in json_o:
 
 			ind_punc = [index for index, value in enumerate(i['tokens']) if value=='.'] + [len(i['tokens'])]
-			
+
 			for index, value in enumerate(ind_punc):
-				
+
 				if index==0:
 					final_json.append({'id': i['id']+'_'+str(index),
 									'document_id': i['document_id'],
@@ -512,8 +512,8 @@ class DEFT2019(datasets.GeneratorBasedBuilder):
 									'document_id': i['document_id'],
 									'ner_tags': i['ner_tags'][prev_value+1:value+1],
 									'tokens': i['tokens'][prev_value+1:value+1]
-									}) 
-		
+									})
+
 		return final_json
 
 	def _generate_examples(self, data_dir, split):

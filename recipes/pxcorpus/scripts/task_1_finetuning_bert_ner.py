@@ -34,9 +34,9 @@ def main():
     )
     #logger.setLevel(logging.INFO)
 
-    if args.offline == True:   
+    if args.offline == True:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
-    else:            
+    else:
         dataset = load_dataset(
             "DrBenchmark/PxCorpus",
             trust_remote_code=True,
@@ -84,7 +84,7 @@ def main():
                     tokens_word = tokenizer(_t)["input_ids"][1:-1]
                     _local.extend(tokens_word)
                     _local_labels.extend([_lb]*len(tokens_word))
-                
+
                 if len(_local) > 250:
                     print(f">> {len(_local)}")
 
@@ -101,16 +101,16 @@ def main():
 
                 tokenized_inputs.append(_local)
                 _labels.append(_local_labels)
-            
+
             tokenized_inputs = {
                 "input_ids": tokenized_inputs,
                 "labels": _labels,
             }
 
         else:
-            
+
             tokenized_inputs = tokenizer(list(examples["tokens"]), truncation=True, max_length=args.max_position_embeddings, padding='max_length', is_split_into_words=True)
-        
+
             labels = []
 
             for i, label in enumerate(examples[f"ner_tags"]):
@@ -130,11 +130,11 @@ def main():
 
                     else:
                         label_ids.append(label[word_idx] if label_all_tokens else -100)
-                    
+
                     previous_word_idx = word_idx
 
                 labels.append(label_ids)
-            
+
             tokenized_inputs["labels"] = labels
 
         return tokenized_inputs
@@ -191,7 +191,7 @@ def main():
         results = metric.compute(predictions=true_predictions, references=true_labels)
 
         return {"precision": results["overall_precision"], "recall": results["overall_recall"], "f1": results["overall_f1"], "accuracy": results["overall_accuracy"]}
-        
+
     trainer = Trainer(
         model,
         training_args,
@@ -226,7 +226,7 @@ def main():
 
     cr_metric = metric.compute(predictions=_true_predictions, references=_true_labels)
     print(cr_metric)
-        
+
     def np_encoder(object):
         if isinstance(object, np.generic):
             return object.item()

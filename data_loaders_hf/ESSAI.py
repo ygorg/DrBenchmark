@@ -11,7 +11,7 @@ _CITATION = """\
     url={http://clementdalloux.fr/?page_id=28},
     journal={Clément Dalloux},
     author={Dalloux, Clément}
-} 
+}
 """
 
 _DESCRIPTION = """\
@@ -69,7 +69,7 @@ class ESSAI(datasets.GeneratorBasedBuilder):
                     )],
                 }
             )
-        
+
         elif self.config.name.find("cls") != -1:
 
             features = datasets.Features(
@@ -82,7 +82,7 @@ class ESSAI(datasets.GeneratorBasedBuilder):
                     ),
                 }
             )
-        
+
         elif self.config.name.find("ner") != -1:
 
             if self.config.name.find("_spec") != -1:
@@ -118,11 +118,11 @@ class ESSAI(datasets.GeneratorBasedBuilder):
         '''
         if self.config.data_dir is None:
             raise ValueError("This is a local dataset. Please pass the data_dir kwarg to load_dataset.")
-        
+
         else:
             data_dir = self.config.data_dir
         '''
-            
+
         return [
             datasets.SplitGenerator(
                 name=datasets.Split.TRAIN,
@@ -186,7 +186,7 @@ class ESSAI(datasets.GeneratorBasedBuilder):
                         id_doc, id_word, word, lemma, tag = splitted[0:5]
                         if len(splitted) >= 8:
                             tag = splitted[6]
-                        
+
                         if tag == "@card@":
                             print(splitted)
 

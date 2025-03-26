@@ -80,7 +80,7 @@ class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
             self.config.name = self.DEFAULT_CONFIG_NAME
 
         if self.config.name == "task_1":
-            
+
             return datasets.DatasetInfo(
                 description=_DESCRIPTION,
                 features=datasets.Features(
@@ -98,9 +98,9 @@ class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
                 citation=_CITATION,
                 license=_LICENSE,
             )
-        
+
         elif self.config.name == "task_2":
-            
+
             return datasets.DatasetInfo(
                 description=_DESCRIPTION,
                 features=datasets.Features(
@@ -183,16 +183,16 @@ class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
         all_res = []
 
         if self.config.name == "task_1":
-            
+
             ratio = 0.8316
-                        
+
             with open(filepath) as fd:
                 doc = xmltodict.parse(fd.read())
 
             for d in doc["doc"]["paire"]:
 
                 if int(d["@id"]) > -1:
-                
+
                     all_res.append({
                         "id": d["@id"],
                         "vote": d["@vote"],
@@ -203,9 +203,9 @@ class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
                     })
 
         elif self.config.name == "task_2":
-            
+
             ratio = 0.8059
-                        
+
             with open(filepath) as fd:
                 doc = xmltodict.parse(fd.read())
 
@@ -222,29 +222,29 @@ class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
 
                 for t in d["cible"]:
                     obj[f"cible_{t['@num']}"] = t["#text"]
-                
+
                 all_res.append(obj)
 
         if split != "test":
-            
+
             ids = [r["id"] for r in all_res]
-    
+
             random.seed(4)
             random.shuffle(ids)
             random.shuffle(ids)
             random.shuffle(ids)
-            
+
             train, validation = np.split(ids, [int(len(ids)*ratio)])
-    
+
             if split == "train":
                 allowed_ids = list(train)
             elif split == "validation":
                 allowed_ids = list(validation)
-            
+
             for r in all_res:
                 if r["id"] in allowed_ids:
                     yield r["id"], r
         else:
-            
+
             for r in all_res:
                 yield r["id"], r

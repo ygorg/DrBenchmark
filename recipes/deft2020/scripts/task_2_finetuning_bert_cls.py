@@ -46,9 +46,9 @@ def main():
     )
     #logger.setLevel(logging.INFO)
 
-    if args.offline == True:   
+    if args.offline == True:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_task_2/")
-    else:            
+    else:
         dataset = load_dataset(
             "DrBenchmark/DEFT2020",
             name="task_2",
@@ -140,7 +140,7 @@ def main():
         target_names=labels_list,
     )
     print(f1_score)
-        
+
     with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({
             "model_name": f"{args.output_dir}/{output_name}_best_model",

@@ -18,7 +18,7 @@ ds = [
     # ["DEFT2019", None],
     ["DEFT2021", "cls"],
     ["DEFT2021", "ner"],
-    
+
     ["CAS", "pos"],
     ["CAS", "cls"],
     ["CAS", "ner_neg"],
@@ -27,7 +27,7 @@ ds = [
     ["ESSAI", "pos"],
     ["ESSAI", "cls"],
     ["ESSAI", "ner_neg"],
-    ["ESSAI", "ner_spec"],    
+    ["ESSAI", "ner_spec"],
 ]
 
 

@@ -124,7 +124,7 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 			names = ['B-ANAT', 'I-ANAT', 'B-PROC', 'I-CHEM', 'I-PHYS', 'B-GEOG', 'B-DEVI', 'O', 'B-PHYS', 'I-LIVB', 'B-OBJC', 'I-DISO', 'I-DEVI', 'B-PHEN', 'B-DISO', 'B-LIVB', 'B-CHEM', 'I-PROC']
 		elif self.config.name.find("patents") != -1:
 			names = ['B-ANAT', 'I-ANAT', 'B-PROC', 'I-CHEM', 'I-PHYS', 'B-DEVI', 'O', 'I-LIVB', 'B-OBJC', 'I-DISO', 'B-PHEN', 'I-PROC', 'B-DISO', 'I-DEVI', 'B-LIVB', 'B-CHEM', 'B-PHYS']
-		
+
 		features = datasets.Features(
 			{
 				"id": datasets.Value("string"),
@@ -196,7 +196,7 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 
 					if type(u["e"]) != type(list()):
 						u["e"] = [u["e"]]
-					
+
 					tags = [{
 						"label": current["@grp"].upper(),
 						"offset_start": int(current["@offset"]),
@@ -237,7 +237,7 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 
 							# if ner_tags[idx] != "O" and ner_tags[idx] != tag['label']:
 							# 	print(f"{token} - currently: {ner_tags[idx]} - after: {tag['label']}")
-							
+
 							if ner_tags[idx][0] == "O":
 								cpt += 1
 								ner_tags[idx][0] = tag["label"]
@@ -261,7 +261,7 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 				}
 
 				all_res.append(obj)
-		
+
 		ids = [r["id"] for r in all_res]
 
 		random.seed(4)
@@ -277,8 +277,8 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 			allowed_ids = list(validation)
 		elif split == "test":
 			allowed_ids = list(test)
-		
+
 		for r in all_res:
 			identifier = r["id"]
 			if identifier in allowed_ids:
-				yield identifier, r 
+				yield identifier, r

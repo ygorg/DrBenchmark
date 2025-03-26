@@ -78,9 +78,9 @@ def main():
     )
     #logger.setLevel(logging.INFO)
 
-    if args.offline == True:   
+    if args.offline == True:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
-    else:            
+    else:
         dataset = load_dataset(
             "DrBenchmark/CLISTER",
             name="source",
@@ -121,7 +121,7 @@ def main():
     dataset_test_ids = list(dataset["test"]["id"])
     dataset_test = dataset_test.remove_columns(["text"])
     dataset_test.set_format("torch")
-    
+
     os.makedirs(args.output_dir, exist_ok=True)
     output_name = f"DrBenchmark-CLISTER-regression-{str(uuid.uuid4().hex)}"
 
@@ -163,7 +163,7 @@ def main():
     _predictions, _labels, _ = trainer.predict(dataset_test)
     predictions = {id: p for id, p in zip(dataset_test_ids, _predictions)}
     labels      = {id: p for id, p in zip(dataset_test_ids, _labels)}
-    
+
     edrm = EDRM(labels, predictions)
     print(">> EDRM: ", edrm)
 

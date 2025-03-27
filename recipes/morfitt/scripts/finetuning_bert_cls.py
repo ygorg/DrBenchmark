@@ -39,9 +39,9 @@ def multi_label_metrics(predictions, labels, threshold=THRESHOLD_VALUE):
     y_pred = toLogits(predictions, threshold)
     y_true = labels
 
-    f1_macro_average = f1_score(y_true=y_true, y_pred=y_pred, average='macro')
-    f1_micro_average = f1_score(y_true=y_true, y_pred=y_pred, average='micro')
-    f1_weighted_average = f1_score(y_true=y_true, y_pred=y_pred, average='weighted')
+    f1_macro_average = f1_score(y_true=y_true, y_pred=y_pred, average='macro', zero_division=.0)
+    f1_micro_average = f1_score(y_true=y_true, y_pred=y_pred, average='micro', zero_division=.0)
+    f1_weighted_average = f1_score(y_true=y_true, y_pred=y_pred, average='weighted', zero_division=.0)
     roc_auc = roc_auc_score(y_true, y_pred, average='micro')
     accuracy = accuracy_score(y_true, y_pred)
 
@@ -155,13 +155,13 @@ def main():
     metrics = multi_label_metrics(predictions, labels, THRESHOLD_VALUE)
     print(metrics)
 
-    cr = classification_report(labels, predictions, labels=range(len(labels_list)), target_names=labels_list, digits=4)
+    cr = classification_report(labels, predictions, labels=range(len(labels_list)), target_names=labels_list, digits=4, zero_division=.0)
     print(cr)
 
     with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({
             "model_name": f"{args.output_dir}/{output_name}_best_model",
-            "metrics": classification_report(labels, predictions, output_dict=True),
+            "metrics": classification_report(labels, predictions, zero_division=.0, output_dict=True),
             "hyperparameters": vars(args),
             "predictions": {
                 "identifiers": dataset["test"]["id"],

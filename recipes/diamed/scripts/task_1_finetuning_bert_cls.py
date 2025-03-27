@@ -144,13 +144,14 @@ def main():
         digits=4,
         labels=range(len(labels_list)),
         target_names=labels_list,
+        zero_division=.0
     )
     print(f1_score)
 
     with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({
             "model_name": f"{args.output_dir}/{output_name}_best_model",
-            "metrics": classification_report(labels, predictions, output_dict=True),
+            "metrics": classification_report(labels, predictions, zero_division=.0, output_dict=True),
             "hyperparameters": vars(args),
             "predictions": {
                 "identifiers": dataset["test"]["identifier"],

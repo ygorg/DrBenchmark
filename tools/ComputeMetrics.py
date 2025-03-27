@@ -1,9 +1,9 @@
 import os
 import json
-from glob import glob
+
 
 path = "./recipes/"
-dirs = [ f.path for f in os.scandir(path) if f.is_dir() ]
+dirs = [f.path for f in os.scandir(path) if f.is_dir()]
 print(dirs)
 
 
@@ -21,14 +21,13 @@ for d in dirs:
     print(d)
 
     d_path = f"{d}/runs/"
-    files = [ f.path for f in os.scandir(d_path) if f.is_file() and str(f).find(".json") != -1 ]
+    files = [f.path for f in os.scandir(d_path) if f.is_file() and str(f).find(".json") != -1]
     print(files)
 
     for file_path in files:
 
-        f_json = open(file_path, "r")
-        data = json.load(f_json)
-        f_json.close()
+        with open(file_path) as f_json:
+            data = json.load(f_json)
 
         print(file_path)
         corpus = ""

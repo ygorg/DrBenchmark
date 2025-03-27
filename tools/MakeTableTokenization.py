@@ -1,21 +1,22 @@
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoTokenizer
+
 
 words = [
-	"asymptomatique",
-	"blépharorraphie",
-	"bradycardie",
-	"bronchographie",
-	"bronchopneumopathie",
-	"dysménorrhée",
-	"glaucome",
-	"IRM",
-	"kystectomie",
-	"neuroleptique",
-	"nicotine",
-	"poliomyélite",
-	"rhinopharyngite",
-	"toxicomanie",
-	"vasoconstricteur",
+    "asymptomatique",
+    "blépharorraphie",
+    "bradycardie",
+    "bronchographie",
+    "bronchopneumopathie",
+    "dysménorrhée",
+    "glaucome",
+    "IRM",
+    "kystectomie",
+    "neuroleptique",
+    "nicotine",
+    "poliomyélite",
+    "rhinopharyngite",
+    "toxicomanie",
+    "vasoconstricteur",
 ]
 
 mapping = {
@@ -23,12 +24,15 @@ mapping = {
     "Dr-BERT/DrBERT-7GB": "DrBERT-FS",
     "Dr-BERT/DrBERT-4GB-CP-PubMedBERT": "DrBERT-CP",
     "camembert-base": "CamemBERT",
+    "almanach/camembert-base": "CamemBERT",
     "almanach/camemberta-base": "CamemBERTa",
     "almanach/camembert-bio-base": "CamemBERT-BIO",
     "flaubert/flaubert_base_uncased": "FlauBERT",
     "emilyalsentzer/Bio_ClinicalBERT": "ClinicalBERT",
     "xlm-roberta-base": "XLM-RoBERTa",
+    "FacebookAI/xlm-roberta-base": "XLM-RoBERTa",
     "distilbert-base-uncased": "DistilBERT",
+    "distilbert/distilbert-base-uncased": "DistilBERT",
 }
 
 results = {}

@@ -127,17 +127,14 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
         key = 0
         all_res = []
 
-        f_seq_in = open(filepath_1, "r")
-        seq_in = f_seq_in.read().split("\n")
-        f_seq_in.close()
+        with open(filepath_1) as f_seq_in:
+            seq_in = f_seq_in.read().split("\n")
 
-        f_seq_label = open(filepath_2, "r")
-        seq_label = f_seq_label.read().split("\n")
-        f_seq_label.close()
+        with open(filepath_2) as f_seq_label:
+            seq_label = f_seq_label.read().split("\n")
 
-        f_in_ner = open(filepath_3, "r")
-        docs = f_in_ner.read().split("\n\n")
-        f_in_ner.close()
+        with open(filepath_3) as f_in_ner:
+            docs = f_in_ner.read().split("\n\n")
 
         for idx, doc in enumerate(docs):
 

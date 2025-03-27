@@ -1,13 +1,11 @@
 import os
 import json
-from glob import glob
 
-import numpy as np
 import matplotlib.pyplot as plt
 
-f = open("./stats/results.json", "r")
-results = json.load(f)
-f.close()
+
+with open("./stats/results.json") as f:
+    results = json.load(f)
 
 avg_results = {}
 
@@ -76,15 +74,22 @@ for model in avg_results:
         results_fewshot[key][model][idx_fewshot] = metric
 
 mapping = {
-    "almanach_camemberta-base": "CamemBERTa",
+    "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext": "PubMedBERT",
+    "microsoft/Biomednlp-PubmedBERT-base-uncased-abstract": "OLD-PubMedBERT",
+    "Dr-BERT/DrBERT-7GB": "DrBERT-FS",
+    "Dr-BERT/DrBERT-4GB-CP-PubMedBERT": "DrBERT-CP",
     "camembert-base": "CamemBERT",
-    "almanach_camembert-bio-base": "CamemBERT-BIO",
-    "dr-bert_drbert-7gb": "DrBERT-FS",
-    "dr-bert_drbert-4gb-cp-pubmedbert": "DrBERT-CP",
-    "microsoft_biomednlp-pubmedbert-base-uncased-abstract-fulltext": "PubMedBERT",
-    "flaubert_flaubert_base_uncased": "FlauBERT",
+    "almanach/camembert-base": "CamemBERT",
+    "almanach/camemberta-base": "CamemBERTa",
+    "almanach/camembert-bio-base": "CamemBERT-BIO",
+    "flaubert/flaubert_base_uncased": "FlauBERT",
+    "emilyalsentzer/Bio_ClinicalBERT": "ClinicalBERT",
     "xlm-roberta-base": "XLM-RoBERTa",
+    "FacebookAI/xlm-roberta-base": "XLM-RoBERTa",
+    "distilbert-base-uncased": "DistilBERT",
+    "distilbert/distilbert-base-uncased": "DistilBERT",
 }
+mapping = {k.lower().replace('/', '_'): v for k, v in mapping.items()}
 
 mapping_line = {
     "CamemBERTa": "-",

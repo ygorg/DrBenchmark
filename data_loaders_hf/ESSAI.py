@@ -297,13 +297,11 @@ class ESSAI(datasets.GeneratorBasedBuilder):
                     key += 1
 
             elif self.config.name.find("cls") != -1:
-
-                f_in = open(filename, "r")
-                conll = [
-                    [b.split("\t") for b in a.split("\n")]
-                    for a in f_in.read().split("\n\n")
-                ]
-                f_in.close()
+                with open(filename) as f_in:
+                    conll = [
+                        [b.split("\t") for b in a.split("\n")]
+                        for a in f_in.read().split("\n\n")
+                    ]
 
                 classe = "negation" if filename.find("_neg") != -1 else "speculation"
 

@@ -5,9 +5,8 @@ from collections import Counter
 
 from transformers import pipeline, AutoTokenizer
 
-f_in = open("./models.txt", "r")
-models = f_in.read().strip().split("\n")
-f_in.close()
+with open('models.txt') as f_in:
+    models = [l.strip() for l in f_in if l.strip()]
 
 matrix = []
 
@@ -69,7 +68,7 @@ f_out = open("./stats/bias.tex", "w")
 
 for b in bias_res.keys():
 
-    f_out.write("\multirow{" + str(len(models)) + "}{*}{" + b + "} \n")
+    f_out.write("\\multirow{" + str(len(models)) + "}{*}{" + b + "} \n")
 
     for m in bias_res[b]:
 
@@ -77,4 +76,4 @@ for b in bias_res.keys():
 
         f_out.write(f"& {m} & {top} \\\\ \n")
 
-    f_out.write("\hline \n\n")
+    f_out.write("\\hline \n\n")

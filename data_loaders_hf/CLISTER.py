@@ -116,9 +116,8 @@ class CLISTER(datasets.GeneratorBasedBuilder):
         key = 0
 
         # Load JSON file
-        f_json = open(json_file)
-        data_map = json.load(f_json)
-        f_json.close()
+        with open(json_file) as f_json:
+            data_map = json.load(f_json)
 
         # Load CSV file
         df = pd.read_csv(csv_file, sep="\t")

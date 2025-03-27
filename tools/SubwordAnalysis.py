@@ -1,17 +1,16 @@
 # SubwordAnalysis.py
 
 import json
-from collections import Counter
 
 from datasets import load_dataset
 from transformers import AutoTokenizer
 
-f_in = open("./models.txt", "r")
-models = [m for m in f_in.read().split("\n") if len(m) > 0]
-f_in.close()
+
+with open('models.txt') as f_in:
+    models = [l.strip() for l in f_in if l.strip()]
 
 tasks = [
-    {"model": "DrBenchmark/DEFT2019", "subset": None, "dataset": None, "data_path": "./recipes/deft2019/data/"},
+    # {"model": "DrBenchmark/DEFT2019", "subset": None, "dataset": None, "data_path": "./recipes/deft2019/data/"},
     {"model": "DrBenchmark/DEFT2021", "subset": "cls", "dataset": None, "data_path": "./recipes/deft2021/data/"},
     {"model": "DrBenchmark/DEFT2021", "subset": "ner", "dataset": None, "data_path": "./recipes/deft2021/data/"},
 
@@ -46,12 +45,15 @@ mapping = {
     "Dr-BERT/DrBERT-7GB": "DrBERT 7GB",
     "Dr-BERT/DrBERT-4GB-CP-PubMedBERT": "DrBERT CP PubMedBERT",
     "camembert-base": "CamemBERT",
+    "almanach/camembert-base": "CamemBERT",
     "almanach/camemberta-base": "CamemBERTa",
     "almanach/camembert-bio-base": "CamemBERT-BIO",
     "flaubert/flaubert_base_uncased": "FlauBERT",
     "emilyalsentzer/Bio_ClinicalBERT": "ClinicalBERT",
     "xlm-roberta-base": "XLM-RoBERTa",
+    "FacebookAI/xlm-roberta-base": "XLM-RoBERTa",
     "distilbert-base-uncased": "DistilBERT",
+    "distilbert/distilbert-base-uncased": "DistilBERT",
 }
 
 matrix_avg_tokens_per_word = {f"{t['model']}-{t['subset']}": {m: [] for m in models} for t in tasks}
@@ -64,7 +66,7 @@ for m in models:
 
     for task in tasks:
 
-        if task['dataset'] == None:
+        if task['dataset'] is None:
             task['dataset'] = load_dataset(task['model'], task['subset'], trust_remote_code=True)["test"]
 
         t_key = f"{task['model']}-{task['subset']}"

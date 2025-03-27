@@ -50,7 +50,7 @@ def multi_label_metrics(predictions, labels, threshold=THRESHOLD_VALUE):
     return metrics
 
 
-def compute_metrics(p: EvalPrediction):
+def compute_metrics(p):
     preds = p.predictions[0] if isinstance(p.predictions, tuple) else p.predictions
     result = multi_label_metrics(
         predictions=preds,

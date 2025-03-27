@@ -5,19 +5,18 @@
 # Apache 2.0
 
 import os
-import shutil
-
-import uuid
 import json
-import argparse
+import uuid
+import shutil
 import logging
+
 from datasets import load_dataset, load_from_disk
+from transformers import Trainer, TrainingArguments
+from transformers import TextClassificationPipeline
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 
-from utils import parse_args, TrainingArgumentsWithMPSSupport
-
-import torch
-from sklearn.metrics import precision_recall_fscore_support, accuracy_score, f1_score, roc_auc_score, accuracy_score, classification_report
-from transformers import AutoTokenizer, EvalPrediction, AutoModelForSequenceClassification, Trainer, TrainingArguments, TextClassificationPipeline
+from utils import parse_args
 
 
 def compute_metrics(pred):

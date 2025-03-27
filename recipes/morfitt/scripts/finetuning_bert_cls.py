@@ -6,20 +6,19 @@
 # Apache 2.0
 
 import os
-import shutil
-
-import uuid
 import json
+import uuid
+import shutil
 import logging
 
+import torch
 import numpy as np
 from datasets import load_dataset, load_from_disk
+from transformers import Trainer, TrainingArguments
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from sklearn.metrics import f1_score, roc_auc_score, accuracy_score, classification_report
 
-from utils import parse_args, TrainingArgumentsWithMPSSupport
-
-import torch
-from sklearn.metrics import precision_recall_fscore_support, accuracy_score, f1_score, roc_auc_score, accuracy_score, classification_report
-from transformers import AutoTokenizer, EvalPrediction, AutoModelForSequenceClassification, Trainer, TrainingArguments, TextClassificationPipeline
+from utils import parse_args
 
 THRESHOLD_VALUE = 0.70
 
@@ -51,7 +50,7 @@ def multi_label_metrics(predictions, labels, threshold=THRESHOLD_VALUE):
     return metrics
 
 
-def compute_metrics(p: EvalPrediction):
+def compute_metrics(p):
     preds = p.predictions[0] if isinstance(p.predictions, tuple) else p.predictions
     result = multi_label_metrics(
         predictions=preds,

@@ -6,23 +6,18 @@
 # Apache 2.0
 
 import os
-import shutil
-
-import uuid
 import json
-import argparse
+import uuid
+import shutil
 import logging
 
-from utils import parse_args, TrainingArgumentsWithMPSSupport
-
-import torch
-import numpy as np
 from scipy import stats
 from datasets import load_dataset, load_from_disk
-
 from sklearn.metrics import root_mean_squared_error
+from transformers import Trainer, TrainingArguments
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-from transformers import AutoTokenizer, EvalPrediction, AutoModelForSequenceClassification, Trainer, TrainingArguments, TextClassificationPipeline
+from utils import parse_args
 
 
 def compute_metrics(eval_pred):

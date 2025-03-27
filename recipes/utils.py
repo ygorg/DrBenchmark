@@ -1,10 +1,9 @@
 import os
-import argparse
-from argparse import Namespace
-
 import yaml
-import torch
+import logging
+import argparse
 
+import torch
 from transformers import TrainingArguments
 
 
@@ -86,4 +85,4 @@ def parse_args():
 
     # print(f">> Model path: >>{args['model_name']}<<")
 
-    return Namespace(**args)
+    return argparse.Namespace(**args)

@@ -6,27 +6,19 @@
 # Apache 2.0
 
 import os
-import shutil
-
-import uuid
 import json
+import uuid
+import shutil
 import logging
-import argparse
-import itertools
 
-import torch
 import evaluate
 import numpy as np
-from sklearn.metrics import classification_report
-
-from utils import parse_args, TrainingArgumentsWithMPSSupport
-
 from datasets import load_dataset, load_from_disk
-
-from transformers import AutoTokenizer
+from transformers import Trainer, TrainingArguments
 from transformers import DataCollatorForTokenClassification
-from transformers import AutoModelForTokenClassification, TrainingArguments, Trainer
-from transformers import EarlyStoppingCallback, IntervalStrategy
+from transformers import AutoTokenizer, AutoModelForTokenClassification
+
+from utils import parse_args
 
 
 def getConfig(raw_labels):

@@ -6,23 +6,19 @@
 # Apache 2.0
 
 import os
-import shutil
-
-import sys
 import json
 import uuid
+import shutil
 import logging
-import itertools
-
-from utils import parse_args, TrainingArgumentsWithMPSSupport
-
-import torch
-import numpy as np
-from sklearn.metrics import classification_report
 
 import evaluate
-from datasets import load_metric, load_dataset, load_from_disk
-from transformers import EarlyStoppingCallback, AutoTokenizer, DataCollatorForTokenClassification, AutoModelForTokenClassification, TrainingArguments, Trainer
+import numpy as np
+from datasets import load_dataset, load_from_disk
+from transformers import Trainer, TrainingArguments
+from transformers import DataCollatorForTokenClassification
+from transformers import AutoTokenizer, AutoModelForTokenClassification
+
+from utils import parse_args
 
 
 def main():

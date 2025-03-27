@@ -5,7 +5,7 @@ from glob import glob
 import numpy as np
 import matplotlib.pyplot as plt
 
-f = open("./stats/results.json","r")
+f = open("./stats/results.json", "r")
 results = json.load(f)
 f.close()
 
@@ -109,7 +109,7 @@ for key in results_fewshot:
     for model in results_fewshot[key]:
 
         values = [float(v) for v in results_fewshot[key][model]]
-        model_name = mapping[model.replace("../../../models/","")]
+        model_name = mapping[model.replace("../../../models/", "")]
         model_linestyle = mapping_line[model_name]
 
         if min(values) < min_val:
@@ -120,14 +120,14 @@ for key in results_fewshot:
 
         plt.plot(bottom, values, label=model_name, linestyle=model_linestyle)
 
-    plt.legend(loc = "lower right", prop={'size': 15})
+    plt.legend(loc="lower right", prop={'size': 15})
 
-    if max_val+5 > 100:
+    if max_val + 5 > 100:
         max_val = 100
     else:
-        max_val = max_val+5
+        max_val = max_val + 5
 
-    plt.ylim(min_val-5, max_val)
+    plt.ylim(min_val - 5, max_val)
     plt.xticks(bottom, [0.25, 0.50, 0.75, 1.0])
 
     plt.tight_layout()

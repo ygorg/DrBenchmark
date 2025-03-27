@@ -61,6 +61,7 @@ _URL = "https://drbenchmark.univ-avignon.fr/corpus/cas_essai.zip"
 
 _LICENSE = 'Data User Agreement'
 
+
 class CAS(datasets.GeneratorBasedBuilder):
 
     DEFAULT_CONFIG_NAME = "pos_spec"
@@ -86,7 +87,7 @@ class CAS(datasets.GeneratorBasedBuilder):
                     "lemmas": [datasets.Value("string")],
                     # "pos_tags": [datasets.Value("string")],
                     "pos_tags": [datasets.features.ClassLabel(
-                        names = ['B-INT', 'B-PRO:DEM', 'B-VER:impf', 'B-VER:ppre', 'B-PRP:det', 'B-KON', 'B-VER:pper', 'B-PRP', 'B-PRO:IND', 'B-VER:simp', 'B-VER:con', 'B-SENT', 'B-VER:futu', 'B-PRO:PER', 'B-VER:infi', 'B-ADJ', 'B-NAM', 'B-NUM', 'B-PUN:cit', 'B-PRO:REL', 'B-VER:subi', 'B-ABR', 'B-NOM', 'B-VER:pres', 'B-DET:ART', 'B-VER:cond', 'B-VER:subp', 'B-DET:POS', 'B-ADV', 'B-SYM', 'B-PUN'],
+                        names=['B-INT', 'B-PRO:DEM', 'B-VER:impf', 'B-VER:ppre', 'B-PRP:det', 'B-KON', 'B-VER:pper', 'B-PRP', 'B-PRO:IND', 'B-VER:simp', 'B-VER:con', 'B-SENT', 'B-VER:futu', 'B-PRO:PER', 'B-VER:infi', 'B-ADJ', 'B-NAM', 'B-NUM', 'B-PUN:cit', 'B-PRO:REL', 'B-VER:subi', 'B-ABR', 'B-NOM', 'B-VER:pres', 'B-DET:ART', 'B-VER:cond', 'B-VER:subp', 'B-DET:POS', 'B-ADV', 'B-SYM', 'B-PUN'],
                     )],
                 }
             )
@@ -100,7 +101,7 @@ class CAS(datasets.GeneratorBasedBuilder):
                     "tokens": [datasets.Value("string")],
                     # "label": datasets.Value("string"),
                     "label": datasets.features.ClassLabel(
-                        names = ['negation_speculation', 'speculation', 'neutral', 'negation'],
+                        names=['negation_speculation', 'speculation', 'neutral', 'negation'],
                     ),
                 }
             )
@@ -120,7 +121,7 @@ class CAS(datasets.GeneratorBasedBuilder):
                     "lemmas": [datasets.Value("string")],
                     # "ner_tags": [datasets.Value("string")],
                     "ner_tags": [datasets.features.ClassLabel(
-                        names = names,
+                        names=names,
                     )],
                 }
             )
@@ -228,13 +229,13 @@ class CAS(datasets.GeneratorBasedBuilder):
                         id_words.append(id_word)
                         words.append(word)
                         lemmas.append(lemma)
-                        POS_tags.append('B-'+tag)
+                        POS_tags.append('B-' + tag)
 
                 dic = {
-                    "id_docs":  np.array(list(map(int, id_docs))),
+                    "id_docs": np.array(list(map(int, id_docs))),
                     "id_words": id_words,
-                    "words":    words,
-                    "lemmas":   lemmas,
+                    "words": words,
+                    "lemmas": lemmas,
                     "POS_tags": POS_tags,
                 }
 
@@ -274,7 +275,7 @@ class CAS(datasets.GeneratorBasedBuilder):
                             continue
 
                         id_doc, id_word, word, lemma, _ = line.split("\t")[0:5]
-                        tag = line.replace("\n","").split("\t")[-1]
+                        tag = line.replace("\n", "").split("\t")[-1]
 
                         if tag == "***" or tag == "_":
                             tag = "O"
@@ -292,10 +293,10 @@ class CAS(datasets.GeneratorBasedBuilder):
                         ner_tags.append(tag)
 
                 dic = {
-                    "id_docs":  np.array(list(map(int, id_docs))),
+                    "id_docs": np.array(list(map(int, id_docs))),
                     "id_words": id_words,
-                    "words":    words,
-                    "lemmas":   lemmas,
+                    "words": words,
+                    "lemmas": lemmas,
                     "ner_tags": ner_tags,
                 }
 
@@ -377,7 +378,7 @@ class CAS(datasets.GeneratorBasedBuilder):
         random.shuffle(ids)
         random.shuffle(ids)
 
-        train, validation, test = np.split(ids, [int(len(ids)*0.70), int(len(ids)*0.80)])
+        train, validation, test = np.split(ids, [int(len(ids) * 0.70), int(len(ids) * 0.80)])
 
         if split == "train":
             allowed_ids = list(train)

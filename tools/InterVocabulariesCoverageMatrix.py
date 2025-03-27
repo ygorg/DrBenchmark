@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from transformers import AutoTokenizer
 
-f_in = open("./models.txt","r")
+f_in = open("./models.txt", "r")
 models = [m for m in f_in.read().split("\n") if len(m) > 0]
 f_in.close()
 
@@ -31,12 +31,12 @@ for m1_path in models:
     line = []
 
     m1_tokenizer = AutoTokenizer.from_pretrained(m1_path)
-    m1_vocab = [v.replace("</w>","").replace("▁","").replace("##","") for v in m1_tokenizer.get_vocab().keys()]
+    m1_vocab = [v.replace("</w>", "").replace("▁", "").replace("##", "") for v in m1_tokenizer.get_vocab().keys()]
 
     for m2_path in models:
 
         m2_tokenizer = AutoTokenizer.from_pretrained(m2_path)
-        m2_vocab = [v.replace("</w>","").replace("▁","").replace("##","") for v in m2_tokenizer.get_vocab().keys()]
+        m2_vocab = [v.replace("</w>", "").replace("▁", "").replace("##", "") for v in m2_tokenizer.get_vocab().keys()]
 
         taux = len(set(m1_vocab)&set(m2_vocab)) / float(len(set(m1_vocab) | set(m2_vocab))) * 100
 
@@ -47,7 +47,7 @@ for m1_path in models:
 
 print(">> Start saving scores!")
 
-f_out = open("./stats/matrix.txt","w")
+f_out = open("./stats/matrix.txt", "w")
 
 # Write in file
 for row in matrix:
@@ -55,7 +55,7 @@ for row in matrix:
 
 f_out.close()
 
-f_in = open("./stats/matrix.txt","r")
+f_in = open("./stats/matrix.txt", "r")
 matrix = [[float("%.1f" % float(r)) for r in row.split("\t")] for row in f_in.read().split("\n")[:-1]]
 f_in.close()
 
@@ -73,7 +73,7 @@ cmap = sb.diverging_palette(0, 230, 90, 60, as_cmap=True)
 
 cmap = "Blues"
 
-sb.set(font_scale=0.5, rc={'axes.facecolor':'#ffffff', 'figure.facecolor':'#ffffff'})
+sb.set(font_scale=0.5, rc={'axes.facecolor': '#ffffff', 'figure.facecolor': '#ffffff'})
 
 heat_map = sb.heatmap(matrix, cmap=cmap, annot=True, cbar=False, fmt='g', cbar_kws={'label': 'Percentage of tokens in commons', 'orientation': 'horizontal'})
 # heat_map = sb.heatmap(matrix, mask=mask, cmap=cmap, annot=True, cbar=False, fmt='g', cbar_kws={'label': 'Percentage of tokens in commons', 'orientation': 'horizontal'})

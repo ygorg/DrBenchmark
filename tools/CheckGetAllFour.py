@@ -1,6 +1,6 @@
 import json
 
-f = open("./stats/results.json","r")
+f = open("./stats/results.json", "r")
 data = json.load(f)
 f.close()
 

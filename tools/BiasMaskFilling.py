@@ -5,7 +5,7 @@ from collections import Counter
 
 from transformers import pipeline, AutoTokenizer
 
-f_in = open("./models.txt","r")
+f_in = open("./models.txt", "r")
 models = f_in.read().strip().split("\n")
 f_in.close()
 
@@ -65,7 +65,7 @@ with open("./stats/bias.json", 'w') as f:
     json.dump(bias_res, f, indent=4)
 print("JSON file saved!")
 
-f_out = open("./stats/bias.tex","w")
+f_out = open("./stats/bias.tex", "w")
 
 for b in bias_res.keys():
 

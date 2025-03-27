@@ -23,6 +23,7 @@ from transformers import AutoTokenizer, EvalPrediction, AutoModelForSequenceClas
 
 THRESHOLD_VALUE = 0.70
 
+
 def toLogits(predictions, threshold=THRESHOLD_VALUE):
 
     sigmoid = torch.nn.Sigmoid()
@@ -33,6 +34,7 @@ def toLogits(predictions, threshold=THRESHOLD_VALUE):
 
     return y_pred
 
+
 def multi_label_metrics(predictions, labels, threshold=THRESHOLD_VALUE):
 
     y_pred = toLogits(predictions, threshold)
@@ -41,12 +43,13 @@ def multi_label_metrics(predictions, labels, threshold=THRESHOLD_VALUE):
     f1_macro_average = f1_score(y_true=y_true, y_pred=y_pred, average='macro')
     f1_micro_average = f1_score(y_true=y_true, y_pred=y_pred, average='micro')
     f1_weighted_average = f1_score(y_true=y_true, y_pred=y_pred, average='weighted')
-    roc_auc = roc_auc_score(y_true, y_pred, average = 'micro')
+    roc_auc = roc_auc_score(y_true, y_pred, average='micro')
     accuracy = accuracy_score(y_true, y_pred)
 
-    metrics = {'f1_macro': f1_macro_average, 'f1_micro': f1_micro_average,  'f1_weighted': f1_weighted_average, 'accuracy': accuracy, 'roc': roc_auc}
+    metrics = {'f1_macro': f1_macro_average, 'f1_micro': f1_micro_average, 'f1_weighted': f1_weighted_average, 'accuracy': accuracy, 'roc': roc_auc}
 
     return metrics
+
 
 def compute_metrics(p: EvalPrediction):
     preds = p.predictions[0] if isinstance(p.predictions, tuple) else p.predictions
@@ -56,6 +59,7 @@ def compute_metrics(p: EvalPrediction):
     )
     return result
 
+
 def main():
 
     args = parse_args()
@@ -64,9 +68,9 @@ def main():
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S"
     )
-    #logger.setLevel(logging.INFO)
+    # logger.setLevel(logging.INFO)
 
-    if args.offline == True:
+    if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
     else:
         dataset = load_dataset(
@@ -90,19 +94,19 @@ def main():
         dataset_train = dataset_train.select(range(int(len(dataset_train) * args.fewshot)))
     if args.max_train_samples:
         dataset_train = dataset_train.select(range(args.max_train_samples))
-    dataset_train = dataset_train.remove_columns(["abstract","id","specialities"])
+    dataset_train = dataset_train.remove_columns(["abstract", "id", "specialities"])
     dataset_train.set_format("torch")
 
     dataset_val = dataset["validation"].map(preprocess_function, batched=False)
     if args.max_val_samples:
         dataset_val = dataset_val.select(range(args.max_val_samples))
-    dataset_val = dataset_val.remove_columns(["abstract","id","specialities"])
+    dataset_val = dataset_val.remove_columns(["abstract", "id", "specialities"])
     dataset_val.set_format("torch")
 
     dataset_test = dataset["test"].map(preprocess_function, batched=False)
     if args.max_test_samples:
         dataset_test = dataset_test.select(range(args.max_test_samples))
-    dataset_test = dataset_test.remove_columns(["abstract","id","specialities"])
+    dataset_test = dataset_test.remove_columns(["abstract", "id", "specialities"])
     # true_labels = list(dataset_test["labels"])
     dataset_test.set_format("torch")
 
@@ -111,8 +115,8 @@ def main():
 
     training_args = TrainingArguments(
         f"{args.output_dir}/{output_name}",
-        evaluation_strategy = "epoch",
-        save_strategy = "epoch",
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
         learning_rate=float(args.learning_rate),
         per_device_train_batch_size=int(args.batch_size),
         per_device_eval_batch_size=int(args.batch_size),
@@ -166,6 +170,7 @@ def main():
                 "system_predictions": predictions.tolist(),
             },
         }, f, ensure_ascii=False, indent=4)
+
 
 if __name__ == '__main__':
     main()

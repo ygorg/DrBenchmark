@@ -1,9 +1,10 @@
 from transformers import AutoTokenizer, AutoModel
 
 
-f_in = open("./models.txt","r")
+f_in = open("./models.txt", "r")
 models = f_in.read().split("\n")
 f_in.close()
+
 
 def save_locally(model_name):
 
@@ -14,6 +15,7 @@ def save_locally(model_name):
     model.save_pretrained(local_path)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.save_pretrained(local_path)
+
 
 for m in models:
     save_locally(m)

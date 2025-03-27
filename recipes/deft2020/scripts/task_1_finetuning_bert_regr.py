@@ -23,10 +23,12 @@ import torch
 from sklearn.metrics import root_mean_squared_error, precision_recall_fscore_support, accuracy_score, f1_score, roc_auc_score, accuracy_score, classification_report
 from transformers import AutoTokenizer, EvalPrediction, AutoModelForSequenceClassification, Trainer, TrainingArguments, TextClassificationPipeline
 
+
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
     rmse = root_mean_squared_error(labels, predictions)
     return {"rmse": rmse}
+
 
 def EDRM(ref, systm, debug=False):
     maxVal = 5
@@ -36,7 +38,7 @@ def EDRM(ref, systm, debug=False):
         if id in systm and systm[id] >= 0 and systm[id] <= 5:
             d = abs(ref[id] - systm[id])
             if debug:
-                print("d: " , d)
+                print("d: ", d)
             if abs(0 - systm[id]) > abs(maxVal - systm[id]):
                 dmax = abs(0 - systm[id])
             else:
@@ -46,26 +48,28 @@ def EDRM(ref, systm, debug=False):
             d = maxVal
             dmax = maxVal
         if debug:
-            print("dmax: " , dmax)
-        dsum += 1 - d/dmax
+            print("dmax: ", dmax)
+        dsum += 1 - d / dmax
         if debug:
             print("dsum: ", dsum)
     edrm = dsum / len(ref)
     return(edrm)
+
 
 def SpMnCorr(ref, systm, alpha=0.05):
     r = [v for k, v in sorted(ref.items())]
     s = [v for k, v in sorted(systm.items())]
 
     if len(r) == len(s):
-        c,p = stats.spearmanr(r,s)
+        c, p = stats.spearmanr(r, s)
         if p > alpha:
             print("Spearman Correlation: reference and system result are not correlated")
         else:
             print("Spearman Correlation: reference and system result are correlated")
-        return([c,p])
+        return([c, p])
     else:
-        return(["error","error"])
+        return(["error", "error"])
+
 
 def main():
 
@@ -75,9 +79,9 @@ def main():
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S"
     )
-    #logger.setLevel(logging.INFO)
+    # logger.setLevel(logging.INFO)
 
-    if args.offline == True:
+    if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_task_1/")
     else:
         dataset = load_dataset(
@@ -126,8 +130,8 @@ def main():
 
     training_args = TrainingArguments(
         f"{args.output_dir}/{output_name}",
-        evaluation_strategy = "epoch",
-        save_strategy = "epoch",
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
         learning_rate=float(args.learning_rate),
         per_device_train_batch_size=int(args.batch_size),
         per_device_eval_batch_size=int(args.batch_size),
@@ -161,13 +165,13 @@ def main():
     logging.info("***** Starting Evaluation *****")
     _predictions, _labels, _ = trainer.predict(dataset_test)
     predictions = {id: p for id, p in zip(dataset_test_ids, _predictions)}
-    labels      = {id: p for id, p in zip(dataset_test_ids, _labels)}
+    labels = {id: p for id, p in zip(dataset_test_ids, _labels)}
 
     edrm = EDRM(labels, predictions)
     print(">> EDRM: ", edrm)
 
     coeff, p = SpMnCorr(labels, predictions)
-    print(">> Spearman Correlation: ", coeff, "(",p,")")
+    print(">> Spearman Correlation: ", coeff, "(", p, ")")
 
     with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({
@@ -184,6 +188,7 @@ def main():
                 "system_predictions": [p for p in _predictions.tolist()],
             },
         }, f, ensure_ascii=False, indent=4)
+
 
 if __name__ == '__main__':
     main()

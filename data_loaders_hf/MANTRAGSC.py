@@ -85,6 +85,7 @@ _DATASET_TYPES = {
 	"patents": "Patent",
 }
 
+
 @dataclass
 class DrBenchmarkConfig(datasets.BuilderConfig):
 	name: str = None
@@ -92,6 +93,7 @@ class DrBenchmarkConfig(datasets.BuilderConfig):
 	description: str = None
 	schema: str = None
 	subset_id: str = None
+
 
 class MANTRAGSC(datasets.GeneratorBasedBuilder):
 
@@ -131,7 +133,7 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 				"tokens": [datasets.Value("string")],
 				"ner_tags": datasets.Sequence(
 					datasets.features.ClassLabel(
-						names = names,
+						names=names,
 					)
 				),
 			}
@@ -210,7 +212,7 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 				tokens = []
 				for i, t in enumerate(_tokens):
 
-					concat = " ".join(_tokens[0:i+1])
+					concat = " ".join(_tokens[0:i + 1])
 
 					offset_start = len(concat) - len(t)
 					offset_end = len(concat)
@@ -229,8 +231,8 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 
 					for idx, token in enumerate(tokens):
 
-						rtok = range(token["offset_start"], token["offset_end"]+1)
-						rtag = range(tag["offset_start"], tag["offset_end"]+1)
+						rtok = range(token["offset_start"], token["offset_end"] + 1)
+						rtag = range(tag["offset_start"], tag["offset_end"] + 1)
 
 						# Check if the ranges are overlapping
 						if bool(set(rtok) & set(rtag)):
@@ -269,7 +271,7 @@ class MANTRAGSC(datasets.GeneratorBasedBuilder):
 		random.shuffle(ids)
 		random.shuffle(ids)
 
-		train, validation, test = np.split(ids, [int(len(ids)*0.70), int(len(ids)*0.80)])
+		train, validation, test = np.split(ids, [int(len(ids) * 0.70), int(len(ids) * 0.80)])
 
 		if split == "train":
 			allowed_ids = list(train)

@@ -31,7 +31,6 @@ ds = [
 ]
 
 
-
 def save_locally(arr):
 
     print(arr)
@@ -44,6 +43,7 @@ def save_locally(arr):
         trust_remote_code=True
     )
     dataset.save_to_disk(f"./recipes/{corpus.lower()}/data/local_hf_{subset}/")
+
 
 for d in ds:
     save_locally(d)

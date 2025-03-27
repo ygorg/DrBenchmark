@@ -38,14 +38,14 @@ for word in words:
     if word not in results:
         results[word] = []
 
-    for model_name in ["almanach/camemberta-base","camembert-base","flaubert/flaubert_base_uncased","Dr-BERT/DrBERT-7GB","microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext","xlm-roberta-base"]:
+    for model_name in ["almanach/camemberta-base", "camembert-base", "flaubert/flaubert_base_uncased", "Dr-BERT/DrBERT-7GB", "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext", "xlm-roberta-base"]:
 
         print(mapping[model_name])
 
         tokenizer = AutoTokenizer.from_pretrained(model_name)
 
         tokenized_sentence = tokenizer.tokenize(word)
-        tokenized_sentence = [t.replace("##","").replace("▁","").replace("</w>","") for t in tokenized_sentence if len(t.replace("##","").replace("▁","").replace("</w>","")) > 0]
+        tokenized_sentence = [t.replace("##", "").replace("▁", "").replace("</w>", "") for t in tokenized_sentence if len(t.replace("##", "").replace("▁", "").replace("</w>", "")) > 0]
         results[word].append(tokenized_sentence)
 
         print(tokenized_sentence)

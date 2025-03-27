@@ -6,8 +6,10 @@ path = "./recipes/"
 dirs = [ f.path for f in os.scandir(path) if f.is_dir() ]
 print(dirs)
 
+
 def contains(p, t):
     return p.find(t) != -1
+
 
 results = {}
 
@@ -160,7 +162,7 @@ for model in results:
         for metric in results[model][task].keys():
 
             avg = sum(results[model][task][metric]) / len(results[model][task][metric])
-            print(">> ", metric , "-", avg)
+            print(">> ", metric, "-", avg)
 
             if metric not in avg_results[model][task]:
                 avg_results[model][task][metric] = -1

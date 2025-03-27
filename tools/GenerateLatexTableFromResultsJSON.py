@@ -4,8 +4,8 @@ f = open("./stats/overall_averaged_metrics.json")
 data = json.load(f)
 f.close()
 
-f_in = open("./models.txt","r")
-models = ["../../../models/" + m.lower().replace("/","_") for m in f_in.read().strip().split("\n")]
+f_in = open("./models.txt", "r")
+models = ["../../../models/" + m.lower().replace("/", "_") for m in f_in.read().strip().split("\n")]
 f_in.close()
 
 print(models)
@@ -34,7 +34,7 @@ mapping = {
     "flaubert_flaubert_base_uncased": "FlauBERT",
 }
 
-output.append("\\textbf{Dataset} & \\textbf{Task} & " + " & ".join(["\\textbf{" + mapping[m.replace("../../../models/","")] + "}" for m in models]) + " \\\\ ")
+output.append("\\textbf{Dataset} & \\textbf{Task} & " + " & ".join(["\\textbf{" + mapping[m.replace("../../../models/", "")] + "}" for m in models]) + " \\\\ ")
 
 latest_corpus = None
 # latest_corpus = tasks[0].split("|")[0]
@@ -63,7 +63,7 @@ for t in tasks:
 
         runs_metrics.append(metric)
 
-    tt = corpus.replace('_','-').upper()
+    tt = corpus.replace('_', '-').upper()
 
     breakline = ""
 

@@ -23,6 +23,7 @@ from sklearn.metrics import precision_recall_fscore_support, accuracy_score, f1_
 
 from transformers import AutoTokenizer, EvalPrediction, AutoModelForSequenceClassification, Trainer, TrainingArguments, TextClassificationPipeline
 
+
 def compute_metrics(pred):
     labels = pred.label_ids
     preds = pred.predictions.argmax(-1)
@@ -35,6 +36,7 @@ def compute_metrics(pred):
         'recall': recall
     }
 
+
 def main():
 
     args = parse_args()
@@ -43,9 +45,9 @@ def main():
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S"
     )
-    #logger.setLevel(logging.INFO)
+    # logger.setLevel(logging.INFO)
 
-    if args.offline == True:
+    if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
     else:
         dataset = load_dataset(
@@ -94,8 +96,8 @@ def main():
 
     training_args = TrainingArguments(
         f"{args.output_dir}/{output_name}",
-        evaluation_strategy = "epoch",
-        save_strategy = "epoch",
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
         learning_rate=float(args.learning_rate),
         per_device_train_batch_size=int(args.batch_size),
         per_device_eval_batch_size=int(args.batch_size),
@@ -150,6 +152,7 @@ def main():
                 "system_predictions": predictions.tolist(),
             },
         }, f, ensure_ascii=False, indent=4)
+
 
 if __name__ == '__main__':
     main()

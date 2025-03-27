@@ -49,7 +49,7 @@ tasks_classes = {f"{t['corpus']}-{t['subset']}-{t['task']}": {
     "test": [],
 } for t in tasks}
 
-for subset in ["train","validation","test"]:
+for subset in ["train", "validation", "test"]:
 
     for task in tasks:
 
@@ -148,7 +148,7 @@ for subset in ["train","validation","test"]:
 
 os.makedirs("./stats/distributions", exist_ok=True)
 
-for subset in ["train","validation","test"]:
+for subset in ["train", "validation", "test"]:
 
     print(subset)
 

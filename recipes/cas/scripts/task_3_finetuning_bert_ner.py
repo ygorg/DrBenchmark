@@ -24,6 +24,7 @@ import evaluate
 from datasets import load_metric, load_dataset, load_from_disk
 from transformers import EarlyStoppingCallback, AutoTokenizer, DataCollatorForTokenClassification, AutoModelForTokenClassification, TrainingArguments, Trainer
 
+
 def main():
 
     args = parse_args()
@@ -32,9 +33,9 @@ def main():
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S"
     )
-    #logger.setLevel(logging.INFO)
+    # logger.setLevel(logging.INFO)
 
-    if args.offline == True:
+    if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
     else:
         dataset = load_dataset(
@@ -84,21 +85,21 @@ def main():
                 for _i, (_t, _lb) in enumerate(zip(_e, _label)):
                     tokens_word = tokenizer(_t)["input_ids"][1:-1]
                     _local.extend(tokens_word)
-                    _local_labels.extend([_lb]*len(tokens_word))
+                    _local_labels.extend([_lb] * len(tokens_word))
 
                 if len(_local) > 250:
                     print(f">> {len(_local)}")
 
-                _local = _local[0:args.max_position_embeddings-1]
-                _local_labels = _local_labels[0:args.max_position_embeddings-1]
+                _local = _local[0:args.max_position_embeddings - 1]
+                _local_labels = _local_labels[0:args.max_position_embeddings - 1]
 
                 _local.append(tokenizer("</s>")["input_ids"][1])
                 _local_labels.append(-100)
 
                 padding_left = args.max_position_embeddings - len(_local)
                 if padding_left > 0:
-                    _local.extend([tokenizer("<pad>")["input_ids"][1]]*padding_left)
-                    _local_labels.extend([-100]*padding_left)
+                    _local.extend([tokenizer("<pad>")["input_ids"][1]] * padding_left)
+                    _local_labels.extend([-100] * padding_left)
 
                 tokenized_inputs.append(_local)
                 _labels.append(_local_labels)
@@ -140,7 +141,7 @@ def main():
 
         return tokenized_inputs
 
-    train_tokenized_datasets      = dataset["train"].map(tokenize_and_align_labels, batched=True).shuffle(seed=42).shuffle(seed=42).shuffle(seed=42)
+    train_tokenized_datasets = dataset["train"].map(tokenize_and_align_labels, batched=True).shuffle(seed=42).shuffle(seed=42).shuffle(seed=42)
     if args.fewshot != 1.0:
         train_tokenized_datasets = train_tokenized_datasets.select(range(int(len(train_tokenized_datasets) * args.fewshot)))
     if args.max_train_samples:
@@ -152,19 +153,18 @@ def main():
     if args.max_val_samples:
         validation_tokenized_datasets = validation_tokenized_datasets.select(range(args.max_val_samples))
 
-    test_tokenized_datasets       = dataset["test"].map(tokenize_and_align_labels, batched=True)
+    test_tokenized_datasets = dataset["test"].map(tokenize_and_align_labels, batched=True)
     # test_tokenized_datasets       = test_tokenized_datasets.remove_columns(["label"])
     if args.max_test_samples:
         test_tokenized_datasets = test_tokenized_datasets.select(range(args.max_test_samples))
-
 
     os.makedirs(args.output_dir, exist_ok=True)
     output_name = f"DrBenchmark-CAS-{str(args.subset)}-{uuid.uuid4()}"
 
     training_args = TrainingArguments(
         f"{args.output_dir}/{output_name}",
-        evaluation_strategy = "epoch",
-        save_strategy = "epoch",
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
         learning_rate=float(args.learning_rate),
         per_device_train_batch_size=int(args.batch_size),
         per_device_eval_batch_size=int(args.batch_size),
@@ -179,7 +179,7 @@ def main():
         report_to='none',
     )
 
-    metric  = evaluate.load("../../../metrics/seqeval.py", experiment_id=output_name)
+    metric = evaluate.load("../../../metrics/seqeval.py", experiment_id=output_name)
     data_collator = DataCollatorForTokenClassification(tokenizer)
 
     def compute_metrics(p):
@@ -244,6 +244,7 @@ def main():
                 "system_predictions": _true_predictions,
             },
         }, f, ensure_ascii=False, indent=4, default=np_encoder)
+
 
 if __name__ == '__main__':
     main()

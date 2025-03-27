@@ -34,7 +34,8 @@ their own models.
 
 _URL = "https://github.com/hltfbk/E3C-Corpus/archive/refs/tags/v2.0.0.zip"
 
-_LANGUAGES = ["English","Spanish","Basque","French","Italian"]
+_LANGUAGES = ["English", "Spanish", "Basque", "French", "Italian"]
+
 
 class E3C(datasets.GeneratorBasedBuilder):
 
@@ -54,7 +55,7 @@ class E3C(datasets.GeneratorBasedBuilder):
             self.config.name = self.DEFAULT_CONFIG_NAME
 
         if self.config.name.find("clinical") != -1:
-            names = ["O","B-CLINENTITY","I-CLINENTITY"]
+            names = ["O", "B-CLINENTITY", "I-CLINENTITY"]
         elif self.config.name.find("temporal") != -1:
             names = ["O", "B-EVENT", "B-ACTOR", "B-BODYPART", "B-TIMEX3", "B-RML", "I-EVENT", "I-ACTOR", "I-BODYPART", "I-TIMEX3", "I-RML"]
 
@@ -92,21 +93,21 @@ class E3C(datasets.GeneratorBasedBuilder):
                 datasets.SplitGenerator(
                     name=datasets.Split.TRAIN,
                     gen_kwargs={
-                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_clinical",""), "layer2"),
+                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_clinical", ""), "layer2"),
                         "split": "train",
                     },
                 ),
                 datasets.SplitGenerator(
                     name=datasets.Split.VALIDATION,
                     gen_kwargs={
-                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_clinical",""), "layer2"),
+                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_clinical", ""), "layer2"),
                         "split": "validation",
                     },
                 ),
                 datasets.SplitGenerator(
                     name=datasets.Split.TEST,
                     gen_kwargs={
-                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_clinical",""), "layer1"),
+                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_clinical", ""), "layer1"),
                         "split": "test",
                     },
                 ),
@@ -120,21 +121,21 @@ class E3C(datasets.GeneratorBasedBuilder):
                 datasets.SplitGenerator(
                     name=datasets.Split.TRAIN,
                     gen_kwargs={
-                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_temporal",""), "layer1"),
+                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_temporal", ""), "layer1"),
                         "split": "train",
                     },
                 ),
                 datasets.SplitGenerator(
                     name=datasets.Split.VALIDATION,
                     gen_kwargs={
-                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_temporal",""), "layer1"),
+                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_temporal", ""), "layer1"),
                         "split": "validation",
                     },
                 ),
                 datasets.SplitGenerator(
                     name=datasets.Split.TEST,
                     gen_kwargs={
-                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_temporal",""), "layer1"),
+                        "filepath": os.path.join(data_dir, "E3C-Corpus-2.0.0/data_annotation", self.config.name.replace("_temporal", ""), "layer1"),
                         "split": "test",
                     },
                 ),
@@ -146,7 +147,7 @@ class E3C(datasets.GeneratorBasedBuilder):
         return [[
             int(entity.get("begin")),
             int(entity.get("end")),
-            text[int(entity.get("begin")) : int(entity.get("end"))],
+            text[int(entity.get("begin")): int(entity.get("end"))],
         ] for entity in entities]
 
     def get_clinical_annotations(self, entities: ResultSet, text: str) -> list:
@@ -154,7 +155,7 @@ class E3C(datasets.GeneratorBasedBuilder):
         return [[
             int(entity.get("begin")),
             int(entity.get("end")),
-            text[int(entity.get("begin")) : int(entity.get("end"))],
+            text[int(entity.get("begin")): int(entity.get("end"))],
             entity.get("entityID"),
         ] for entity in entities]
 
@@ -213,7 +214,7 @@ class E3C(datasets.GeneratorBasedBuilder):
                 clinical_cuid = ["CUI_LESS"] * len(filtered_tokens)
                 temporal_information_labels = ["O"] * len(filtered_tokens)
 
-                for entity_type in ["CLINENTITY","EVENT","ACTOR","BODYPART","TIMEX3","RML"]:
+                for entity_type in ["CLINENTITY", "EVENT", "ACTOR", "BODYPART", "TIMEX3", "RML"]:
 
                     if len(content[entity_type]) != 0:
 
@@ -264,7 +265,7 @@ class E3C(datasets.GeneratorBasedBuilder):
                 random.shuffle(ids)
                 random.shuffle(ids)
 
-                train, validation = np.split(ids, [int(len(ids)*0.8738)])
+                train, validation = np.split(ids, [int(len(ids) * 0.8738)])
 
                 if split == "train":
                     allowed_ids = list(train)
@@ -288,7 +289,7 @@ class E3C(datasets.GeneratorBasedBuilder):
             random.shuffle(ids)
             random.shuffle(ids)
 
-            train, validation, test = np.split(ids, [int(len(ids)*0.70), int(len(ids)*0.80)])
+            train, validation, test = np.split(ids, [int(len(ids) * 0.70), int(len(ids) * 0.80)])
 
             if split == "train":
                 allowed_ids = list(train)

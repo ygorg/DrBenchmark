@@ -36,6 +36,7 @@ of 55 participants (38% non-experts, 25% doctors, 36% medical practitioners), ma
 
 _URL = "https://zenodo.org/record/6524162/files/pxslu.zip?download=1"
 
+
 class PxCorpus(datasets.GeneratorBasedBuilder):
 
     BUILDER_CONFIGS = [
@@ -165,7 +166,7 @@ class PxCorpus(datasets.GeneratorBasedBuilder):
         random.shuffle(ids)
         random.shuffle(ids)
 
-        train, validation, test = np.split(ids, [int(len(ids)*0.70), int(len(ids)*0.80)])
+        train, validation, test = np.split(ids, [int(len(ids) * 0.70), int(len(ids) * 0.80)])
 
         if split == "train":
             allowed_ids = list(train)

@@ -27,6 +27,7 @@ from transformers import DataCollatorForTokenClassification
 from transformers import AutoModelForTokenClassification, TrainingArguments, Trainer
 from transformers import EarlyStoppingCallback, IntervalStrategy
 
+
 def getConfig(raw_labels):
 
     label2id = {}
@@ -38,6 +39,7 @@ def getConfig(raw_labels):
 
     return label2id, id2label
 
+
 def main():
 
     args = parse_args()
@@ -46,9 +48,9 @@ def main():
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S"
     )
-    #logger.setLevel(logging.INFO)
+    # logger.setLevel(logging.INFO)
 
-    if args.offline == True:
+    if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
     else:
         dataset = load_dataset(
@@ -90,21 +92,21 @@ def main():
                 for _i, (_t, _lb) in enumerate(zip(_e, _label)):
                     tokens_word = tokenizer(_t)["input_ids"][1:-1]
                     _local.extend(tokens_word)
-                    _local_labels.extend([_lb]*len(tokens_word))
+                    _local_labels.extend([_lb] * len(tokens_word))
 
                 if len(_local) > 250:
                     print(f">> {len(_local)}")
 
-                _local = _local[0:args.max_position_embeddings-1]
-                _local_labels = _local_labels[0:args.max_position_embeddings-1]
+                _local = _local[0:args.max_position_embeddings - 1]
+                _local_labels = _local_labels[0:args.max_position_embeddings - 1]
 
                 _local.append(tokenizer("</s>")["input_ids"][1])
                 _local_labels.append(-100)
 
                 padding_left = args.max_position_embeddings - len(_local)
                 if padding_left > 0:
-                    _local.extend([tokenizer("<pad>")["input_ids"][1]]*padding_left)
-                    _local_labels.extend([-100]*padding_left)
+                    _local.extend([tokenizer("<pad>")["input_ids"][1]] * padding_left)
+                    _local_labels.extend([-100] * padding_left)
 
                 tokenized_inputs.append(_local)
                 _labels.append(_local_labels)
@@ -179,7 +181,7 @@ def main():
     )
 
     print('Load Metrics')
-    metric  = evaluate.load("../../../metrics/seqeval.py", experiment_id=output_name)
+    metric = evaluate.load("../../../metrics/seqeval.py", experiment_id=output_name)
     data_collator = DataCollatorForTokenClassification(tokenizer)
 
     def compute_metrics(p):
@@ -248,6 +250,7 @@ def main():
                 "system_predictions": _true_predictions,
             },
         }, f, ensure_ascii=False, indent=4, default=np_encoder)
+
 
 if __name__ == '__main__':
     main()

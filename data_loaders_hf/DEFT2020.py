@@ -62,6 +62,7 @@ _CITATION = """\
 }
 """
 
+
 class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
     """DEFT 2020 - DEFT (DÉfi Fouille de Textes)"""
 
@@ -107,7 +108,7 @@ class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
                     {
                         "id": datasets.Value("string"),
                         "correct_cible": datasets.features.ClassLabel(
-                            names = ['1', '2', '3'],
+                            names=['1', '2', '3'],
                         ),
                         "source": datasets.Value("string"),
                         "cible_1": datasets.Value("string"),
@@ -234,7 +235,7 @@ class FrenchMedMCQA(datasets.GeneratorBasedBuilder):
             random.shuffle(ids)
             random.shuffle(ids)
 
-            train, validation = np.split(ids, [int(len(ids)*ratio)])
+            train, validation = np.split(ids, [int(len(ids) * ratio)])
 
             if split == "train":
                 allowed_ids = list(train)

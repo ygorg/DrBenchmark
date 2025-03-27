@@ -80,7 +80,7 @@ class CLISTER(datasets.GeneratorBasedBuilder):
     def _split_generators(self, dl_manager):
         data_dir = dl_manager.download_and_extract(_URL).rstrip("/")
 
-        #data_dir = self.config.data_dir.rstrip("/")
+        # data_dir = self.config.data_dir.rstrip("/")
 
         return [
             datasets.SplitGenerator(
@@ -145,7 +145,7 @@ class CLISTER(datasets.GeneratorBasedBuilder):
             random.shuffle(ids)
             random.shuffle(ids)
 
-            train, validation = np.split(ids, [int(len(ids)*0.8333)])
+            train, validation = np.split(ids, [int(len(ids) * 0.8333)])
 
             if split == "train":
                 allowed_ids = list(train)

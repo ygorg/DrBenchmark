@@ -57,6 +57,7 @@ _LABELS_BASE = ['DISO', 'DEVI', 'CHEM', 'GEOG', 'OBJC', 'PHEN', 'PHYS', 'LIVB', 
 
 _URL = "https://quaerofrenchmed.limsi.fr/QUAERO_FrenchMed_brat.zip"
 
+
 class QUAERO(datasets.GeneratorBasedBuilder):
 	"""QUAERO dataset."""
 
@@ -82,7 +83,7 @@ class QUAERO(datasets.GeneratorBasedBuilder):
 						"tokens": datasets.Sequence(datasets.Value("string")),
 						"ner_tags": datasets.Sequence(
 							datasets.features.ClassLabel(
-								names = ['O', 'B-LIVB', 'I-LIVB', 'B-PROC', 'I-PROC', 'B-ANAT', 'I-ANAT', 'B-DEVI', 'I-DEVI', 'B-CHEM', 'I-CHEM', 'B-GEOG', 'I-GEOG', 'B-PHYS', 'I-PHYS', 'B-PHEN', 'I-PHEN', 'B-DISO', 'I-DISO', 'B-OBJC', 'I-OBJC'],
+								names=['O', 'B-LIVB', 'I-LIVB', 'B-PROC', 'I-PROC', 'B-ANAT', 'I-ANAT', 'B-DEVI', 'I-DEVI', 'B-CHEM', 'I-CHEM', 'B-GEOG', 'I-GEOG', 'B-PHYS', 'I-PHYS', 'B-PHEN', 'I-PHEN', 'B-DISO', 'I-DISO', 'B-OBJC', 'I-OBJC'],
 							)
 						),
 					}
@@ -103,7 +104,7 @@ class QUAERO(datasets.GeneratorBasedBuilder):
 						"tokens": datasets.Sequence(datasets.Value("string")),
 						"ner_tags": datasets.Sequence(
 							datasets.features.ClassLabel(
-								names = ['O', 'B-LIVB', 'I-LIVB', 'B-PROC', 'I-PROC', 'B-ANAT', 'I-ANAT', 'B-DEVI', 'I-DEVI', 'B-CHEM', 'I-CHEM', 'B-GEOG', 'I-GEOG', 'B-PHYS', 'I-PHYS', 'B-PHEN', 'I-PHEN', 'B-DISO', 'I-DISO', 'B-OBJC', 'I-OBJC'],
+								names=['O', 'B-LIVB', 'I-LIVB', 'B-PROC', 'I-PROC', 'B-ANAT', 'I-ANAT', 'B-DEVI', 'I-DEVI', 'B-CHEM', 'I-CHEM', 'B-GEOG', 'I-GEOG', 'B-PHYS', 'I-PHYS', 'B-PHEN', 'I-PHEN', 'B-DISO', 'I-DISO', 'B-OBJC', 'I-OBJC'],
 							)
 						),
 					}
@@ -149,23 +150,23 @@ class QUAERO(datasets.GeneratorBasedBuilder):
 
 		for i in json_o:
 
-			ind_punc = [index for index, value in enumerate(i['tokens']) if value=='.'] + [len(i['tokens'])]
+			ind_punc = [index for index, value in enumerate(i['tokens']) if value == '.'] + [len(i['tokens'])]
 			# ind_punc = [index for index, value in enumerate(i['tokens']) if value=='.' and not str(i['tokens'][index-1]).isnumeric()]
 
 			for index, value in enumerate(ind_punc):
 
-				if index==0:
-					final_json.append({'id': i['id']+'_'+str(index),
-									'document_id': i['id']+'_'+str(index),
-									'ner_tags': i['ner_tags'][:value+1],
-									'tokens': i['tokens'][:value+1]
+				if index == 0:
+					final_json.append({'id': i['id'] + '_' + str(index),
+									'document_id': i['id'] + '_' + str(index),
+									'ner_tags': i['ner_tags'][:value + 1],
+									'tokens': i['tokens'][:value + 1]
 									})
 				else:
-					prev_value = ind_punc[index-1]
-					final_json.append({'id': i['id']+'_'+str(index),
-									'document_id': i['document_id']+'_'+str(index),
-									'ner_tags': i['ner_tags'][prev_value+1:value+1],
-									'tokens': i['tokens'][prev_value+1:value+1]
+					prev_value = ind_punc[index - 1]
+					final_json.append({'id': i['id'] + '_' + str(index),
+									'document_id': i['document_id'] + '_' + str(index),
+									'ner_tags': i['ner_tags'][prev_value + 1:value + 1],
+									'tokens': i['tokens'][prev_value + 1:value + 1]
 									})
 
 		return final_json
@@ -235,15 +236,15 @@ class QUAERO(datasets.GeneratorBasedBuilder):
 
 				for idx_j, j in enumerate(i['spans']):
 
-					len_j = int(j['end'])-int(j['start'])
-					range_j = [l for l in range(int(j['start']),int(j['end']),1)]
+					len_j = int(j['end']) - int(j['start'])
+					range_j = [l for l in range(int(j['start']), int(j['end']), 1)]
 
 					keep = True
 
-					for idx_k, k in enumerate(i['spans'][idx_j+1:]):
+					for idx_k, k in enumerate(i['spans'][idx_j + 1:]):
 
-						len_k = int(k['end'])-int(k['start'])
-						range_k = [l for l in range(int(k['start']),int(k['end']),1)]
+						len_k = int(k['end']) - int(k['start'])
+						range_k = [l for l in range(int(k['start']), int(k['end']), 1)]
 
 						inter = list(set(range_k).intersection(set(range_j)))
 						if len(inter) > 0 and len_j < len_k:
@@ -254,16 +255,16 @@ class QUAERO(datasets.GeneratorBasedBuilder):
 
 			# Create list of labels + id to separate different annotation and prepare IOB2 format
 			nb_tokens = len(i['tokens'])
-			ner_tags = ['O']*nb_tokens
+			ner_tags = ['O'] * nb_tokens
 
 			for slct in selected_annotations:
 
-				for x in range(slct['token_start'], slct['token_end']+1, 1):
+				for x in range(slct['token_start'], slct['token_end'] + 1, 1):
 
 					if slct['label'] in list_label:
 
 						if ner_tags[x] == 'O':
-							ner_tags[x] = slct['label']+'-'+slct['id']
+							ner_tags[x] = slct['label'] + '-' + slct['id']
 
 			# Make IOB2 format
 			ner_tags_IOB2 = []
@@ -276,14 +277,14 @@ class QUAERO(datasets.GeneratorBasedBuilder):
 					current_label = label.split('-')[0]
 					current_id = label.split('-')[1]
 					if idx_l == 0:
-						ner_tags_IOB2.append('B-'+current_label)
-					elif current_label in ner_tags[idx_l-1]:
-						if current_id == ner_tags[idx_l-1].split('-')[1]:
-							ner_tags_IOB2.append('I-'+current_label)
+						ner_tags_IOB2.append('B-' + current_label)
+					elif current_label in ner_tags[idx_l - 1]:
+						if current_id == ner_tags[idx_l - 1].split('-')[1]:
+							ner_tags_IOB2.append('I-' + current_label)
 						else:
-							ner_tags_IOB2.append('B-'+current_label)
+							ner_tags_IOB2.append('B-' + current_label)
 					else:
-						ner_tags_IOB2.append('B-'+current_label)
+						ner_tags_IOB2.append('B-' + current_label)
 
 			# print(ner_tags_IOB2)
 			dict_out.append({

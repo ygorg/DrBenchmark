@@ -7,6 +7,7 @@ import torch
 
 from transformers import TrainingArguments
 
+
 class TrainingArgumentsWithMPSSupport(TrainingArguments):
 
     @property
@@ -77,9 +78,9 @@ def parse_args():
 
     args["output_dir"] = args["output_dir"].rstrip('/')
 
-    if args["offline"] == True:
+    if args["offline"]:
         os.environ["WANDB_DISABLED"] = "true"
-        os.environ['TRANSFORMERS_OFFLINE']='1'
+        os.environ['TRANSFORMERS_OFFLINE'] = '1'
         model_name_clean = args['model_name'].lower().replace('/', '_')
         args["model_name"] = f"../../../models/{model_name_clean}"
 

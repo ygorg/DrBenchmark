@@ -39,9 +39,9 @@ def main():
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-        datefmt="%m/%d/%Y %H:%M:%S"
+        datefmt="%m/%d/%Y %H:%M:%S",
+        level=logging.INFO
     )
-    # logger.setLevel(logging.INFO)
 
     if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
@@ -88,7 +88,7 @@ def main():
                     _local_labels.extend([_lb] * len(tokens_word))
 
                 if len(_local) > 250:
-                    print(f">> {len(_local)}")
+                    logging.info(f">> {len(_local)}")
 
                 _local = _local[0:args.max_position_embeddings - 1]
                 _local_labels = _local_labels[0:args.max_position_embeddings - 1]
@@ -173,7 +173,7 @@ def main():
         report_to='none',
     )
 
-    print('Load Metrics')
+    logging.info('Load Metrics')
     metric = evaluate.load("../../../metrics/seqeval.py", experiment_id=output_name)
     data_collator = DataCollatorForTokenClassification(tokenizer)
 
@@ -185,7 +185,7 @@ def main():
         true_predictions = [[label_list[p] for (p, l) in zip(prediction, label) if l != -100] for prediction, label in zip(predictions, labels)]
         true_labels = [[label_list[l] for (p, l) in zip(prediction, label) if l != -100] for prediction, label in zip(predictions, labels)]
 
-        results = metric.compute(predictions=true_predictions, references=true_labels)
+        results = metric.compute(predictions=true_predictions, references=true_labels, zero_division=.0)
 
         macro_values = [results[r]["f1"] for r in results if "overall_" not in r]
         macro_f1 = sum(macro_values) / len(macro_values)
@@ -225,8 +225,8 @@ def main():
         for prediction, label in zip(predictions, labels)
     ]
 
-    cr_metric = metric.compute(predictions=_true_predictions, references=_true_labels)
-    print(cr_metric)
+    cr_metric = metric.compute(predictions=_true_predictions, references=_true_labels, zero_division=.0)
+    logging.info(cr_metric)
 
     def np_encoder(object):
         if isinstance(object, np.generic):

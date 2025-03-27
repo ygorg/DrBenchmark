@@ -39,9 +39,9 @@ def main():
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-        datefmt="%m/%d/%Y %H:%M:%S"
+        datefmt="%m/%d/%Y %H:%M:%S",
+        level=logging.INFO
     )
-    #logger.setLevel(logging.INFO)
 
     if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
@@ -129,7 +129,7 @@ def main():
     predictions, labels, _ = trainer.predict(dataset_test)
     predictions = np.argmax(predictions, axis=1)
 
-    f1_score = classification_report(
+    cr_metrics = classification_report(
         labels,
         predictions,
         digits=4,
@@ -137,7 +137,7 @@ def main():
         target_names=labels_list,
         zero_division=.0
     )
-    print(f1_score)
+    logging.info(cr_metrics)
 
     with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({

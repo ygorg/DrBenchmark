@@ -38,9 +38,9 @@ def main():
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-        datefmt="%m/%d/%Y %H:%M:%S"
+        datefmt="%m/%d/%Y %H:%M:%S",
+        level=logging.INFO
     )
-    # logger.setLevel(logging.INFO)
 
     if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
@@ -171,11 +171,11 @@ def main():
 
     logging.info(">> Hamming Score")
     hamming_score = sum(hamming_scores) / len(hamming_scores)
-    print(hamming_score)
+    logging.info(hamming_score)
 
     logging.info(">> Exact Match Ratio (EMR)")
     exact_match = compute_accuracy_exact_match(y_true, y_pred)
-    print(exact_match)
+    logging.info(exact_match)
 
     with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({

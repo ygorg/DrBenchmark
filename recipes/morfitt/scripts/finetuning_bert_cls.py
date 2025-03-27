@@ -65,9 +65,9 @@ def main():
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-        datefmt="%m/%d/%Y %H:%M:%S"
+        datefmt="%m/%d/%Y %H:%M:%S",
+        level=logging.INFO
     )
-    # logger.setLevel(logging.INFO)
 
     if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
@@ -153,10 +153,10 @@ def main():
     predictions = toLogits(predictions, THRESHOLD_VALUE)
 
     metrics = multi_label_metrics(predictions, labels, THRESHOLD_VALUE)
-    print(metrics)
+    logging.info(metrics)
 
     cr = classification_report(labels, predictions, labels=range(len(labels_list)), target_names=labels_list, digits=4, zero_division=.0)
-    print(cr)
+    logging.info(cr)
 
     with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({

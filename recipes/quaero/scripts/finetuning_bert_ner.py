@@ -72,7 +72,8 @@ def main():
         # label_all_tokens = True
 
         if args.model_name.lower().find("flaubert") != -1:
-
+            if not args.max_position_embeddings:
+                args.max_position_embeddings = tokenizer.model_max_length
             tokenized_inputs = []
             _labels = []
 
@@ -97,11 +98,6 @@ def main():
                 _local.append(tokenizer("</s>")["input_ids"][1])
                 _local_labels.append(-100)
 
-                padding_left = args.max_position_embeddings - len(_local)
-                if padding_left > 0:
-                    _local.extend([tokenizer("<pad>")["input_ids"][1]] * padding_left)
-                    _local_labels.extend([-100] * padding_left)
-
                 tokenized_inputs.append(_local)
                 _labels.append(_local_labels)
 
@@ -112,7 +108,7 @@ def main():
 
         else:
 
-            tokenized_inputs = tokenizer(list(examples["tokens"]), truncation=True, max_length=args.max_position_embeddings, padding='max_length', is_split_into_words=True)
+            tokenized_inputs = tokenizer(list(examples["tokens"]), truncation=True, max_length=args.max_position_embeddings, padding='do_not_pad', is_split_into_words=True)
 
             labels = []
 

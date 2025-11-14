@@ -1,3 +1,4 @@
+import os
 import aiohttp
 import logging
 
@@ -10,18 +11,22 @@ ds = [
     ["DEFT2020", "task_2"],
     ["E3C", "French_clinical"],
     ["E3C", "French_temporal"],
+    ["E3C", "French_clinical_long"],
+    ["E3C", "French_temporal_long"],
     ["FrenchMedMCQA", None],
     ["MANTRAGSC", "fr_emea"],
     ["MANTRAGSC", "fr_medline"],
     ["MANTRAGSC", "fr_patents"],
     ["MORFITT", "source"],
     ["QUAERO", "emea"],
+    ["QUAERO", "emea_long"],
     ["QUAERO", "medline"],
     ["PxCorpus", None],
     ["DiaMED", None],
     # ["DEFT2019", None],
     ["DEFT2021", "cls"],
     ["DEFT2021", "ner"],
+    ["DEFT2021", "ner_long"],
 
     ["CAS", "pos"],
     ["CAS", "cls"],
@@ -40,8 +45,12 @@ def save_locally(arr):
 
     logging.info(f">> Downloading {corpus}{' - '+subset if subset else ''}")
 
+    data_loader_path = f"DrBenchmark/{corpus}"
+    if subset and 'long' in subset:
+        data_loader_path = f"{os.path.dirname(__file__)}/data_loaders_hf/{corpus}_long.py"
+
     dataset = load_dataset(
-        f"DrBenchmark/{corpus}",
+        data_loader_path,
         subset,
         trust_remote_code=True,
         storage_options={

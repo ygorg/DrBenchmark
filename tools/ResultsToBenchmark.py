@@ -26,11 +26,15 @@ task2pretty = {
     "regr": "STS",
 
     "ner": "NER",
+    "ner_long": "NER Long",
     "ner_clinical": "NER Clinical",
     "ner_emea": "NER EMEA",
+    "ner_clinical_long": "NER Clinical Long",
+    "ner_emea_long": "NER EMEA Long",
     "ner_patents": "NER Patents",
     "ner_medline": "NER MEDLINE",
     "ner_temporal": "NER Temporal",
+    "ner_temporal_long": "NER Temporal Long",
     "ner_neg": "NER Neg",
     "ner_spec": "NER Spec",
 }
@@ -52,11 +56,15 @@ task2metric = {
     'regr': ('edrm', 'spearman_correlation_coef'),
 
     'ner': ('overall_f1',),
+    'ner_long': ('overall_f1',),
     'ner_clinical': ('overall_f1',),
     'ner_emea': ('overall_f1',),
+    'ner_clinical_long': ('overall_f1',),
+    'ner_emea_long': ('overall_f1',),
     'ner_patents': ('overall_f1',),
     'ner_medline': ('overall_f1',),
     'ner_temporal': ('overall_f1',),
+    'ner_temporal_long': ('overall_f1',),
     'ner_neg': ('overall_f1',),
     'ner_spec': ('overall_f1',),
 }
@@ -92,7 +100,12 @@ order = [
     ('cas', 'ner_spec', 'overall_f1'),
     ('essai', 'cls', 'weighted_f1'),
     ('essai', 'ner_neg', 'overall_f1'),
-    ('essai', 'ner_spec', 'overall_f1')
+    ('essai', 'ner_spec', 'overall_f1'),
+
+    ('quaero', 'ner_emea_long', 'overall_f1'),
+    ('e3c', 'ner_clinical_long', 'overall_f1'),
+    ('e3c', 'ner_temporal_long', 'overall_f1'),
+    ('deft2021', 'ner_long', 'overall_f1'),
 ]
 
 custom_model_map = {

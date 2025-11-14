@@ -14,6 +14,8 @@ fp2task = {
     "-cls-": "cls",
     "-French_clinical-": "ner_clinical",
     "-French_temporal-": "ner_temporal",
+    "-French_clinical_long-": "ner_clinical_long",
+    "-French_temporal_long-": "ner_temporal_long",
     "-fr_emea-": "ner_emea",
     "-fr_medline-": "ner_medline",
     "-fr_patents-": "ner_patents",
@@ -23,6 +25,7 @@ fp2task = {
     "-regression-": "regr",
     "-mcqa-": "mcqa",
     "-ner-": "ner",
+    "-ner_long-": "ner_long",
     "-ner_neg-": "ner_neg",
     "-ner_spec-": "ner_spec"
 }

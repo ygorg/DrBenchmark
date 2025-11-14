@@ -12,7 +12,9 @@ task2script = {
     'diamed-cls': './run.sh {model_name}',
 
     'e3c-ner_clinical': './run.sh {model_name} French_clinical',
+    'e3c-ner_clinical_long': './run.sh {model_name} French_clinical_long',
     'e3c-ner_temporal': './run.sh {model_name} French_temporal',
+    'e3c-ner_temporal_long': './run.sh {model_name} French_temporal_long',
 
     'essai-pos': './run_task_1.sh {model_name}',
     'essai-cls': './run_task_2.sh {model_name}',
@@ -33,13 +35,15 @@ task2script = {
     'deft2020-regr': './run_task_1.sh {model_name}',
     'deft2020-cls': './run_task_2.sh {model_name}',
 
-    'deft2021-ner': './run_task_1.sh {model_name}',
+    'deft2021-ner': './run_task_1.sh {model_name} ner',
+    'deft2021-ner_long': './run_task_1.sh {model_name} ner_long',
     'deft2021-cls': './run_task_2.sh {model_name}',
 
     'pxcorpus-ner': './run_task_1.sh {model_name}',
     'pxcorpus-cls': './run_task_2.sh {model_name}',
 
     'quaero-ner_emea': './run.sh {model_name} emea',
+    'quaero-ner_emea_long': './run.sh {model_name} emea_long',
     'quaero-ner_medline': './run.sh {model_name} medline',
 }
 

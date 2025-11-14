@@ -47,8 +47,9 @@ def main():
     if args.offline:
         dataset = load_from_disk(f"{args.data_dir.rstrip('/')}/local_hf_{args.subset}/")
     else:
+        path_to_dataloader = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data_loaders_hf')
         dataset = load_dataset(
-            "DrBenchmark/E3C",
+            os.path.join(path_to_dataloader, 'E3C_long.py'),
             name=args.subset,
             trust_remote_code=True,
         )

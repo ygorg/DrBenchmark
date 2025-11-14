@@ -65,9 +65,9 @@ def parse_args():
     args_global = yaml.safe_load(open("../../../config.yaml"))
 
     # Update args with local arguments (which contains great default for each task)
-    args.update({k: v for k, v in args_local.items() if v is not None})
+    args.update(args_local)
     # Overwrite local args with global arguments (which allow changing params for all tasks)
-    args.update({k: v for k, v in args_global.items() if v is not None})
+    args.update(args_global)
     # Overwrite local and global with command line arguments (which allow precise param changing)
     #  and fills missing arguments with default values
     args.update({k: v for k, v in args_cli.items() if v is not None or k not in args})

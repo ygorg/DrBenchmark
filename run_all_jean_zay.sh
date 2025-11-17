@@ -55,12 +55,15 @@ for MODEL_NAME in "${MODELS[@]}"; do
             "cd ./recipes/deft2020/scripts/ && srun bash run_task_2.sh '$MODEL_NAME'"
             
             "cd ./recipes/deft2021/scripts/ && srun bash run_task_1.sh '$MODEL_NAME'"
+            "cd ./recipes/deft2021/scripts/ && srun bash run_task_1.sh '$MODEL_NAME' 'ner_long'"
             "cd ./recipes/deft2021/scripts/ && srun bash run_task_2.sh '$MODEL_NAME'"
             
             "cd ./recipes/diamed/scripts/ && srun bash run.sh '$MODEL_NAME'"
             
             "cd ./recipes/e3c/scripts/ && srun bash run.sh '$MODEL_NAME' 'French_clinical'"
+            "cd ./recipes/e3c/scripts/ && srun bash run.sh '$MODEL_NAME' 'French_clinical_long'"
             "cd ./recipes/e3c/scripts/ && srun bash run.sh '$MODEL_NAME' 'French_temporal'"
+            "cd ./recipes/e3c/scripts/ && srun bash run.sh '$MODEL_NAME' 'French_temporal_long'"
             
             "cd ./recipes/essai/scripts/ && srun bash run_task_1.sh '$MODEL_NAME'"
             "cd ./recipes/essai/scripts/ && srun bash run_task_2.sh '$MODEL_NAME'"
@@ -80,6 +83,7 @@ for MODEL_NAME in "${MODELS[@]}"; do
             "cd ./recipes/pxcorpus/scripts/ && srun bash run_task_2.sh '$MODEL_NAME'"
             
             "cd ./recipes/quaero/scripts/ && srun bash run.sh '$MODEL_NAME' 'emea'"
+            "cd ./recipes/quaero/scripts/ && srun bash run.sh '$MODEL_NAME' 'emea_long'"
             "cd ./recipes/quaero/scripts/ && srun bash run.sh '$MODEL_NAME' 'medline'"
         )
     done

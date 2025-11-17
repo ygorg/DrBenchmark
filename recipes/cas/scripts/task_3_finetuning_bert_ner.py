@@ -37,7 +37,7 @@ def main():
     else:
         dataset = load_dataset(
             "DrBenchmark/CAS",
-            name=str(args.subset),
+            name=args.subset,
             trust_remote_code=True,
         )
 
@@ -158,11 +158,11 @@ def main():
         f"{args.output_dir}/{output_name}",
         evaluation_strategy="epoch",
         save_strategy="epoch",
-        learning_rate=float(args.learning_rate),
-        per_device_train_batch_size=int(args.batch_size),
-        per_device_eval_batch_size=int(args.batch_size),
-        num_train_epochs=int(args.epochs),
-        weight_decay=float(args.weight_decay),
+        learning_rate=args.learning_rate,
+        per_device_train_batch_size=args.batch_size,
+        per_device_eval_batch_size=args.batch_size,
+        num_train_epochs=args.epochs,
+        weight_decay=args.weight_decay,
         push_to_hub=False,
         metric_for_best_model="f1",
         load_best_model_at_end=True,
@@ -226,7 +226,7 @@ def main():
         if isinstance(object, np.generic):
             return object.item()
 
-    with open(f"../runs/{output_name}.json", 'w', encoding='utf-8') as f:
+    with open(f"{args.run_dir}/{output_name}.json", 'w', encoding='utf-8') as f:
         json.dump({
             "model_name": f"{args.output_dir}/{output_name}_best_model",
             "metrics": cr_metric,

@@ -33,6 +33,8 @@ def parse_args():
                         help="Training epochs")
     parser.add_argument("--batch_size", type=int, required=False,
                         help="Training batch size")
+    parser.add_argument("--gradient_accumulation_steps", type=int, required=False, default=1,
+                        help="Number of batches before update model's weights.")
     parser.add_argument("--max_position_embeddings", type=int, required=False,
                         help="Max position embeddings")
     parser.add_argument("--weight_decay", type=float, required=False,
